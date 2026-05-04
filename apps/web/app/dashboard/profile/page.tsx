@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { PageHeader } from "../_components/PageHeader"
-import { NavIcon } from "../_components/nav-icon"
+import Link from "next/link";
+import { PageHeader } from "../_components/PageHeader";
+import { NavIcon } from "../_components/nav-icon";
 
 const menuItems = [
   {
@@ -21,7 +21,7 @@ const menuItems = [
     description: "Push, email, SMS",
     href: "/dashboard/settings",
   },
-]
+];
 
 export default function ProfilePage() {
   return (
@@ -45,7 +45,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <h2 className="text-white font-bold text-lg">MrXlebka</h2>
-          <p className="text-white/50 text-sm">alex.petrov@email.com</p>
+          <p className="text-white/50 text-sm">maxark02@email.com</p>
         </div>
 
         {/* Stats */}
@@ -68,7 +68,9 @@ export default function ProfilePage() {
       {/* Account Level */}
       <div
         className="rounded-2xl p-5"
-        style={{ background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)" }}
+        style={{
+          background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)",
+        }}
       >
         <div className="flex items-center justify-between mb-2">
           <span className="text-white/50 text-xs">Account Level</span>
@@ -110,10 +112,13 @@ export default function ProfilePage() {
               <p className="text-white font-medium text-sm">{item.label}</p>
               <p className="text-white/50 text-xs">{item.description}</p>
             </div>
-            <NavIcon name="chevron-right" className="w-4 h-4 text-white/30 shrink-0" />
+            <NavIcon
+              name="chevron-right"
+              className="w-4 h-4 text-white/30 shrink-0"
+            />
           </Link>
         ))}
       </div>
     </div>
-  )
+  );
 }
