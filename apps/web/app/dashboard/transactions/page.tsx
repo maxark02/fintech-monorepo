@@ -31,12 +31,12 @@ export default function TransactionsPage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-2xl mx-auto">
       <PageHeader
         title="Transactions"
         rightElement={
           <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white">
-            <NavIcon name="calendar" className="w-5 h-5" />
+            <NavIcon name="plus" className="w-5 h-5" />
           </button>
         }
       />

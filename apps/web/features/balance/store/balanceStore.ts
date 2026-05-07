@@ -13,7 +13,7 @@ type BalanceStore = {
 
 export const useBalanceStore = create<BalanceStore>((set) => ({
   balance: null,
-  isLoading: true,
+  isLoading: false,
   error: null,
 
   setBalance: (balance) => set({ balance }),

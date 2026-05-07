@@ -1,6 +1,7 @@
 "use client";
 import { NavIcon } from "../_components/nav-icon";
 import { BalanceCard } from "../../../features/balance";
+import Link from "next/link";
 
 const weeklyData = [
   { day: "Mon", value: 4300 },
@@ -19,7 +20,7 @@ function WeeklyBarChart() {
   const barWidth = 22;
   const gap =
     (chartWidth - weeklyData.length * barWidth) / (weeklyData.length + 1);
-  const yLabels = [0, 2500, 5000, 7500, 10000];
+  const yLabels = [0, 25000, 50000, 75000, 100000];
 
   return (
     <div className="flex gap-2">
@@ -97,17 +98,19 @@ function WeeklyBarChart() {
 
 export default function BalancePage() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[#3b5bdb] flex items-center justify-center text-white font-bold text-sm">
-            T
+            <Link href="/dashboard/profile">M</Link>
           </div>
-          <div>
-            <p className="text-white/50 text-xs">Welcome back,</p>
-            <p className="text-white font-bold text-sm">Maksim Arkhipov</p>
-          </div>
+          <Link href="/dashboard/profile">
+            <div>
+              <p className="text-white/50 text-xs">Welcome back,</p>
+              <p className="text-white font-bold text-sm">Maksim Arkhipov</p>
+            </div>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <button className="relative w-9 h-9 rounded-full bg-[#1c1c22] flex items-center justify-center text-white">
@@ -124,15 +127,15 @@ export default function BalancePage() {
       <BalanceCard />
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="flex flex-col items-center gap-2">
-          <button className="w-14 h-14 rounded-full bg-[#3d1515] flex items-center justify-center">
+          <button className="w-30 h-14 rounded-2xl bg-[#3d1515] flex items-center justify-center">
             <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
           </button>
           <span className="text-white/70 text-xs">Send</span>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <button className="w-14 h-14 rounded-full bg-[#0f2d18] flex items-center justify-center">
+          <button className="w-30 h-14 rounded-2xl bg-[#0f2d18] flex items-center justify-center">
             <NavIcon
               name="arrow-down-left"
               className="w-6 h-6 text-green-500"
@@ -140,18 +143,15 @@ export default function BalancePage() {
           </button>
           <span className="text-white/70 text-xs">Request</span>
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <button className="w-14 h-14 rounded-full bg-[#0f1a35] flex items-center justify-center">
-            <NavIcon name="card" className="w-6 h-6 text-blue-400" />
-          </button>
-          <span className="text-white/70 text-xs">Cards</span>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <button className="w-14 h-14 rounded-full bg-[#1f1035] flex items-center justify-center">
-            <NavIcon name="plus" className="w-6 h-6 text-purple-400" />
-          </button>
-          <span className="text-white/70 text-xs">More</span>
-        </div>
+
+        <Link href="/dashboard/cards">
+          <div className="flex flex-col items-center gap-2">
+            <button className="w-30 h-14 rounded-2xl bg-[#0f1a35] flex items-center justify-center">
+              <NavIcon name="card" className="w-6 h-6 text-blue-400" />
+            </button>
+            <span className="text-white/70 text-xs">Cards</span>
+          </div>
+        </Link>
       </div>
 
       {/* Weekly Spending Card */}

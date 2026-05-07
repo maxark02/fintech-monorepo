@@ -7,12 +7,7 @@ export type Balance = {
   change: number;
   changeAmount: number;
   transactions: Transaction[];
-};
-
-export const TransactionType = {
-  INCOME: "income",
-  EXPENSE: "expense",
-  TRANSFER: "transfer",
+  cards: Card[];
 };
 
 export type Transaction = {
@@ -25,6 +20,7 @@ export type Transaction = {
   merchant: string;
   type: "income" | "expense" | "transfer";
   emoji: string;
+  cardId: string;
 };
 
 export type StockItem = {
@@ -53,4 +49,11 @@ export type AuthState = {
 export type User = {
   username: string;
   email: string;
+};
+export type Card = {
+  id: string;
+  cardNumber: string;
+  type: "credit" | "debit";
+  network: "Visa" | "Mastercard" | null;
+  lastFour: string;
 };

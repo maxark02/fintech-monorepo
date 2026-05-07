@@ -11,6 +11,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "income",
     emoji: "💰",
+    cardId: "1",
   },
   {
     id: "2",
@@ -22,6 +23,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Starbucks",
     type: "expense",
     emoji: "☕",
+    cardId: "1",
   },
   {
     id: "3",
@@ -33,6 +35,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Netflix",
     type: "expense",
     emoji: "🎬",
+    cardId: "1",
   },
   {
     id: "4",
@@ -44,6 +47,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Client",
     type: "income",
     emoji: "💻",
+    cardId: "1",
   },
   {
     id: "5",
@@ -55,6 +59,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "income",
     emoji: "💰",
+    cardId: "1",
   },
   {
     id: "6",
@@ -66,6 +71,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "expense",
     emoji: "💰",
+    cardId: "1",
   },
   {
     id: "7",
@@ -77,6 +83,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "expense",
     emoji: "🍗",
+    cardId: "1",
   },
   {
     id: "8",
@@ -88,6 +95,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "expense",
     emoji: "💳",
+    cardId: "1",
   },
   {
     id: "9",
@@ -99,6 +107,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "income",
     emoji: "💰",
+    cardId: "1",
   },
   {
     id: "10",
@@ -110,5 +119,18 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
     merchant: "Toss",
     type: "expense",
     emoji: "🎧",
+    cardId: "1",
+  },
+  {
+    id: "11",
+    title: "Airpods Max",
+    category: "expense",
+    amount: 720000,
+    currency: "KRW",
+    date: "2026-06-18",
+    merchant: "Toss",
+    type: "expense",
+    emoji: "🎧",
+    cardId: "2",
   },
 ];

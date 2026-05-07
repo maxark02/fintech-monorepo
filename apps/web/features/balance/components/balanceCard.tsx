@@ -34,27 +34,22 @@ export function BalanceCard() {
         </button>
       </div>
 
-      <p className="text-white text-4xl font-bold mb-1">
-        {isLoading ? "..." : `₩${balance?.total.toLocaleString("ko-KR")}`}
-      </p>
-      <p className="text-green-400 text-sm mb-4">
-        {isLoading
-          ? "..."
-          : `+${balance?.changeAmount.toLocaleString("ko-KR")} this month`}
+      <p className="text-white text-4xl font-bold mb-4">
+        {!balance ? "..." : `₩${balance?.total.toLocaleString("ko-KR")}`}
       </p>
 
       <div className="flex items-center border-t border-white/20 pt-4">
         <div className="flex-1">
           <p className="text-white/60 text-xs mb-1">Income</p>
           <p className="text-white font-semibold text-sm">
-            {isLoading ? "..." : `₩${totalIncome.toLocaleString("ko-KR")}`}
+            {!balance ? "..." : `₩${totalIncome.toLocaleString("ko-KR")}`}
           </p>
         </div>
         <div className="w-px h-8 bg-white/20 mx-4"></div>
         <div className="flex-1">
           <p className="text-white/60 text-xs mb-1">Expenses</p>
           <p className="text-white font-semibold text-sm">
-            {isLoading ? "..." : `${totalExpense.toLocaleString("ko-KR")}`}
+            {!balance ? "..." : `${totalExpense.toLocaleString("ko-KR")}`}
           </p>
         </div>
       </div>

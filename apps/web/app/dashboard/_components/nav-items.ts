@@ -5,18 +5,14 @@ export const navItems = [
     icon: "home",
   },
   {
-    label: "Activity",
+    label: "Transactions",
     href: "/dashboard/transactions",
     icon: "activity",
   },
-  {
-    label: "Cards",
-    href: "/dashboard/cards",
-    icon: "card",
-  },
+
   {
     label: "Profile",
     href: "/dashboard/profile",
     icon: "profile",
   },
-] as const
+] as const;

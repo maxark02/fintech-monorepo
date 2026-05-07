@@ -1,124 +1,158 @@
-import Link from "next/link";
-import { PageHeader } from "../_components/PageHeader";
-import { NavIcon } from "../_components/nav-icon";
+"use client";
 
-const menuItems = [
-  {
-    icon: "credit-card" as const,
-    label: "Payment Methods",
-    description: "Manage cards and accounts",
-    href: "/dashboard/cards",
-  },
-  {
-    icon: "shield" as const,
-    label: "Security",
-    description: "Password, 2FA, biometrics",
-    href: "/dashboard/settings",
-  },
-  {
-    icon: "bell" as const,
-    label: "Notifications",
-    description: "Push, email, SMS",
-    href: "/dashboard/settings",
-  },
-];
+import {
+  ArrowLeft,
+  Camera,
+  ChevronRight,
+  LogOut,
+  Shield,
+  Bell,
+  Globe,
+  CreditCard,
+  Users,
+  HelpCircle,
+} from "lucide-react";
+import Link from "next/link";
+import { useBalance } from "../../../features/balance/hooks/useBalance";
 
 export default function ProfilePage() {
+  const menuItems = [
+    {
+      icon: CreditCard,
+      label: "Payment Methods",
+      description: "Manage cards and accounts",
+      link: "/dashboard/cards",
+    },
+    {
+      icon: Shield,
+      label: "Security",
+      description: "Password, 2FA, biometrics",
+      link: "#",
+    },
+    {
+      icon: Bell,
+      label: "Notifications",
+      description: "Push, email, SMS",
+      link: "#",
+    },
+    {
+      icon: Globe,
+      label: "Language & Region",
+      description: "English, Russia",
+      link: "#",
+    },
+    {
+      icon: Users,
+      label: "Referral Program",
+      description: "Invite friends and earn",
+      link: "#",
+    },
+    {
+      icon: HelpCircle,
+      label: "Help & Support",
+      description: "FAQ, Contact us",
+      link: "#",
+    },
+  ];
+  const { balance, isLoading } = useBalance();
+
+  const transactionCount = balance?.transactions?.length ?? 0;
+
+  const cardCount = balance?.cards?.length ?? 0;
+
   return (
-    <div className="space-y-4">
-      <PageHeader
-        title="Profile"
-        rightElement={
-          <button className="text-[#3b5bdb] text-sm font-semibold">Edit</button>
-        }
-      />
+    <div className="dark text-foreground h-screen">
+      {/* Header */}
+      <header className="sticky">
+        <div className="max-w-3xl mx-auto px-4 md:px-6 ">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/dashboard/balance"
+              className="w-10 h-10 rounded-full bg-accent hover:bg-accent/70 flex items-center justify-center transition-colors"
+            >
+              <ArrowLeft size={20} />
+            </Link>
+            <h1>Profile</h1>
+            <Link
+              href="/settings"
+              className="text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              Edit
+            </Link>
+          </div>
+        </div>
+      </header>
 
-      {/* Profile Card */}
-      <div className="bg-[#1c1c22] rounded-2xl p-5">
-        <div className="flex flex-col items-center mb-5">
-          <div className="relative mb-3">
-            <div className="w-16 h-16 rounded-full bg-[#3b5bdb] flex items-center justify-center text-white font-bold text-xl">
-              MX
+      {/* Main Content */}
+      <main className="max-w-3xl mx-auto  md:px-6 py-6 pb-24 md:pb-6">
+        {/* Profile Card */}
+        <div className="bg-[#1c1c22]  rounded-3xl p-6 mb-4">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="relative">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
+                <span className="text-2xl text-white">MA</span>
+              </div>
+              <button className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-background">
+                <Camera size={14} className="text-white" />
+              </button>
             </div>
-            <div className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#3b5bdb] flex items-center justify-center">
-              <NavIcon name="camera" className="w-3 h-3 text-white" />
+            <div className="flex-1">
+              <h2 className="text-xl mb-1">Maks</h2>
+              <p className="text-muted-foreground text-sm">Maks@gmail.com</p>
             </div>
           </div>
-          <h2 className="text-white font-bold text-lg">MrXlebka</h2>
-          <p className="text-white/50 text-sm">maxark02@email.com</p>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 divide-x divide-white/10">
-          <div className="flex flex-col items-center py-2">
-            <span className="text-white font-bold text-base">₽2.4M</span>
-            <span className="text-white/50 text-xs mt-0.5">Total Balance</span>
-          </div>
-          <div className="flex flex-col items-center py-2">
-            <span className="text-white font-bold text-base">3</span>
-            <span className="text-white/50 text-xs mt-0.5">Cards</span>
-          </div>
-          <div className="flex flex-col items-center py-2">
-            <span className="text-white font-bold text-base">127</span>
-            <span className="text-white/50 text-xs mt-0.5">Transactions</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Account Level */}
-      <div
-        className="rounded-2xl p-5"
-        style={{
-          background: "linear-gradient(135deg, #1a1040 0%, #2d1b69 100%)",
-        }}
-      >
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-white/50 text-xs">Account Level</span>
-          <div className="w-9 h-9 rounded-xl bg-[#3b5bdb] flex items-center justify-center">
-            <NavIcon name="shield" className="w-5 h-5 text-white" />
-          </div>
-        </div>
-
-        <p className="text-white font-bold text-xl mb-4">Premium Member</p>
-
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-white/50 text-xs">Level Progress</span>
-          <span className="text-white text-xs font-medium">75%</span>
-        </div>
-
-        <div className="w-full h-1.5 rounded-full bg-[#1f1a35] overflow-hidden">
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: "75%",
-              background: "linear-gradient(to right, #3b5bdb, #a855f7)",
-            }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Menu Items */}
-      <div className="space-y-2">
-        {menuItems.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className="bg-[#1c1c22] rounded-2xl px-4 py-4 flex items-center gap-4 hover:bg-[#252530] transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full bg-[#252530] flex items-center justify-center text-white/70 shrink-0">
-              <NavIcon name={item.icon} className="w-5 h-5" />
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+            <div className="text-center">
+              <div className="text-xl mb-1">
+                {isLoading
+                  ? "..."
+                  : `₩${balance?.total.toLocaleString("ko-KR")}`}
+              </div>
+              <div className="text-sm text-muted-foreground">Total Balance</div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-medium text-sm">{item.label}</p>
-              <p className="text-white/50 text-xs">{item.description}</p>
+            <div className="text-center">
+              <div className="text-2xl mb-1">{cardCount}</div>
+              <div className="text-sm text-muted-foreground">Cards</div>
             </div>
-            <NavIcon
-              name="chevron-right"
-              className="w-4 h-4 text-white/30 shrink-0"
-            />
-          </Link>
-        ))}
-      </div>
+            <div className="text-center">
+              <div className="text-2xl mb-1">{transactionCount}</div>
+              <div className="text-sm text-muted-foreground">Transactions</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Menu Items */}
+        <div className="space-y-2 mb-6">
+          {menuItems.map((item, index) => (
+            <Link
+              key={index}
+              href={item.link}
+              className="flex items-center gap-4 bg-[#1c1c22] rounded-2xl p-4 hover:bg-accent/70 transition-colors"
+            >
+              <div className="w-10 h-10 bg-background rounded-xl flex items-center justify-center">
+                <item.icon size={20} className="text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <div className="mb-1">{item.label}</div>
+                <div className="text-sm text-muted-foreground">
+                  {item.description}
+                </div>
+              </div>
+              <ChevronRight size={20} className="text-muted-foreground" />
+            </Link>
+          ))}
+        </div>
+
+        {/* Logout Button */}
+        <Link href="/login">
+          <button className="w-full flex items-center justify-center gap-2 bg-red-600/10 border border-red-600/30 text-red-600 rounded-2xl py-4 hover:bg-red-600/20 transition-colors">
+            <LogOut size={20} />
+            <span>Log Out</span>
+          </button>
+        </Link>
+      </main>
     </div>
   );
 }
