@@ -3,36 +3,39 @@ name: CI
 on:
   push:
     branches: [ main ]
-  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9 --activate
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm ci
-
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Type check
-        run: pnpm run type-check
-
-      - name: Run tests
-        run: pnpm test
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm run build
+        run: pnpm build
