@@ -83,30 +83,8 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Phone Input */}
-          <div>
-            <label className="text-sm text-muted-foreground mb-2 block">
-              Phone Number
-            </label>
-            <div className="relative">
-              <Phone
-                size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                placeholder="+7 (___) ___-__-__"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
-                required
-              />
-            </div>
-          </div>
-
           {/* Password Input */}
+
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Password
@@ -150,12 +128,14 @@ export default function RegisterPage() {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20"
-          >
-            Create Account
-          </button>
+          <Link href="/dashboard/balance">
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20"
+            >
+              Create Account
+            </button>
+          </Link>
         </form>
 
         {/* Divider */}

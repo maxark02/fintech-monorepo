@@ -3,20 +3,44 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
-export default function loginPage() {
-  const router = useRouter();
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login
-    router.push("/dashboard");
+    setIsLoading(true);
+    setError("");
+
+    const result = await signIn("credentials", {
+      email: formData.email,
+      password: formData.password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Invalid email or password");
+      setIsLoading(false);
+      return;
+    }
+
+    window.location.href = "/dashboard/balance";
+  };
+
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/dashboard/balance" });
+  };
+
+  const handleAppleSignIn = () => {
+    signIn("apple", { callbackUrl: "/dashboard/balance" });
   };
 
   return (
@@ -92,6 +116,8 @@ export default function loginPage() {
               <input
                 type="checkbox"
                 id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 className="w-4 h-4 rounded accent-blue-600"
               />
               <label
@@ -109,12 +135,16 @@ export default function loginPage() {
             </Link>
           </div>
 
+          {/* Error */}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 mt-6"
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 mt-6 disabled:opacity-50"
           >
-            Sign In
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
@@ -127,10 +157,18 @@ export default function loginPage() {
 
         {/* Social Login */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <button className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors">
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
+          >
             <span>Google</span>
           </button>
-          <button className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors">
+          <button
+            type="button"
+            onClick={handleAppleSignIn}
+            className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
+          >
             <span>Apple</span>
           </button>
         </div>
@@ -140,7 +178,7 @@ export default function loginPage() {
           <p className="text-muted-foreground">
             Don't have an account?{" "}
             <Link
-              href="/"
+              href="/register"
               className="text-blue-600 hover:text-blue-700 transition-colors"
             >
               Create account
