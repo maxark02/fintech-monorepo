@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useBalance } from "../../../features/balance/hooks/useBalance";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 export default function ProfilePage() {
   const menuItems = [
@@ -54,11 +56,17 @@ export default function ProfilePage() {
       link: "#",
     },
   ];
+
+  const { data: session } = useSession();
+
   const { balance, isLoading } = useBalance();
 
   const transactionCount = balance?.transactions?.length ?? 0;
 
   const cardCount = balance?.cards?.length ?? 0;
+
+  const username = session?.user?.name ?? "User";
+  const email = session?.user?.email ?? "";
 
   return (
     <div className="dark text-foreground h-screen">
@@ -97,8 +105,8 @@ export default function ProfilePage() {
               </button>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl mb-1">Maks</h2>
-              <p className="text-muted-foreground text-sm">Maks@gmail.com</p>
+              <h2 className="text-xl mb-1">{username}</h2>
+              <p className="text-muted-foreground text-sm">{email}</p>
             </div>
           </div>
 
@@ -146,12 +154,14 @@ export default function ProfilePage() {
         </div>
 
         {/* Logout Button */}
-        <Link href="/login">
-          <button className="w-full flex items-center justify-center gap-2 bg-red-600/10 border border-red-600/30 text-red-600 rounded-2xl py-4 hover:bg-red-600/20 transition-colors">
-            <LogOut size={20} />
-            <span>Log Out</span>
-          </button>
-        </Link>
+
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="w-full flex items-center justify-center gap-2 bg-red-600/10 border border-red-600/30 text-red-600 rounded-2xl py-4 hover:bg-red-600/20 transition-colors"
+        >
+          <LogOut size={20} />
+          <span>Log Out</span>
+        </button>
       </main>
     </div>
   );

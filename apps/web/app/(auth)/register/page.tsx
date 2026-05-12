@@ -2,29 +2,44 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate registration
-    router.push("/dashboard");
+    setIsLoading(true);
+    setError("");
+
+    const result = await signIn("credentials", {
+      username: formData.name,
+      email: formData.email,
+      password: formData.password,
+      mode: "register",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Registration failed. Try a different email.");
+      setIsLoading(false);
+      return;
+    }
+
+    window.location.href = "/dashboard/balance";
   };
 
   return (
     <div className="dark min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl text-white">T</span>
@@ -35,9 +50,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name Input */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Full Name
@@ -60,7 +73,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Email Input */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Email
@@ -82,8 +94,6 @@ export default function RegisterPage() {
               />
             </div>
           </div>
-
-          {/* Password Input */}
 
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
@@ -114,7 +124,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Terms */}
           <div className="flex items-start gap-3">
             <input
               type="checkbox"
@@ -127,25 +136,23 @@ export default function RegisterPage() {
             </label>
           </div>
 
-          {/* Submit Button */}
-          <Link href="/dashboard/balance">
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20"
-            >
-              Create Account
-            </button>
-          </Link>
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
+          >
+            {isLoading ? "Creating account..." : "Create Account"}
+          </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-border"></div>
           <span className="text-sm text-muted-foreground">or</span>
           <div className="flex-1 h-px bg-border"></div>
         </div>
 
-        {/* Social Login */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <button className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors">
             <span>Google</span>
@@ -155,7 +162,6 @@ export default function RegisterPage() {
           </button>
         </div>
 
-        {/* Login Link */}
         <div className="text-center">
           <p className="text-muted-foreground">
             Already have an account?{" "}

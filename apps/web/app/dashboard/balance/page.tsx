@@ -2,6 +2,7 @@
 import { NavIcon } from "../_components/nav-icon";
 import { BalanceCard } from "../../../features/balance";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const weeklyData = [
   { day: "Mon", value: 4300 },
@@ -97,6 +98,10 @@ function WeeklyBarChart() {
 }
 
 export default function BalancePage() {
+  const { data: session } = useSession();
+
+  const username = session?.user?.name ?? "User";
+
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
       {/* Header */}
@@ -108,7 +113,7 @@ export default function BalancePage() {
           <Link href="/dashboard/profile">
             <div>
               <p className="text-white/50 text-xs">Welcome back,</p>
-              <p className="text-white font-bold text-sm">Maksim Arkhipov</p>
+              <p className="text-white font-bold text-sm">{username}</p>
             </div>
           </Link>
         </div>
