@@ -1,31 +1,29 @@
 "use client";
 
 import { useEffect } from "react";
-import { useState } from "react";
 import { getBalance } from "../api/balanceApi";
 import { useBalanceStore } from "../store/balanceStore";
 
 export const useBalance = () => {
-  const { balance, isLoading, error } = useBalanceStore();
-  const { setBalance, setIsLoading, setError } = useBalanceStore();
-  const [mounted, setMounted] = useState(false);
+  const balance = useBalanceStore((s) => s.balance);
+  const isLoading = useBalanceStore((s) => s.isLoading);
+  const error = useBalanceStore((s) => s.error);
+  const setBalance = useBalanceStore((s) => s.setBalance);
+  const setIsLoading = useBalanceStore((s) => s.setIsLoading);
+  const setError = useBalanceStore((s) => s.setError);
 
   useEffect(() => {
-    setMounted(true);
     setIsLoading(true);
-    console.log("fetching balance", balance);
     getBalance()
-      .then((balance) => {
-        console.log("getBalance loaded", balance);
-        setBalance(balance);
+      .then((data) => {
+        setBalance(data);
         setIsLoading(false);
       })
-      .catch((error) => {
-        console.error("error", error);
-        setError(error);
+      .catch((err) => {
+        setError(err.message);
         setIsLoading(false);
-        console.log(error);
       });
-  }, [setBalance, setIsLoading, setError]);
-  return { balance, isLoading, error, mounted };
+  }, []);
+
+  return { balance, isLoading, error };
 };
