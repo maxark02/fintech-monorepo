@@ -181,7 +181,7 @@ export default function LoginPage() {
           <p className="text-muted-foreground">
             Don't have an account?{" "}
             <Link
-              href="/register"
+              href="/(auth)/register"
               className="text-blue-600 hover:text-blue-700 transition-colors"
             >
               Create account

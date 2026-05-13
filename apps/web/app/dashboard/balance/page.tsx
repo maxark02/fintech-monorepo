@@ -3,6 +3,7 @@ import { NavIcon } from "../_components/nav-icon";
 import { BalanceCard } from "../../../features/balance";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { Skeleton } from "@fin/ui";
 
 const weeklyData = [
   { day: "Mon", value: 4300 },
@@ -111,10 +112,14 @@ export default function BalancePage() {
             <Link href="/dashboard/profile">M</Link>
           </div>
           <Link href="/dashboard/profile">
-            <div>
-              <p className="text-white/50 text-xs">Welcome back,</p>
-              <p className="text-white font-bold text-sm">{username}</p>
-            </div>
+            {session ? (
+              <div>
+                <p className="text-white/50 text-xs">Welcome back,</p>
+                <p className="text-white font-bold text-sm">{username}</p>
+              </div>
+            ) : (
+              <Skeleton className="w-20 h-4" />
+            )}
           </Link>
         </div>
         <div className="flex items-center gap-2">
