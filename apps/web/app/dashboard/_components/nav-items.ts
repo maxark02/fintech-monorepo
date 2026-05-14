@@ -13,6 +13,6 @@ export const navItems = [
   {
     label: "Notifications",
     href: "/dashboard/notifications",
-    icon: "notifications",
+    icon: "bell",
   },
 ] as const;
