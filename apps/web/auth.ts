@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { supabaseAdmin } from "@/lib/supabaseServer";
+import { getSupabaseAdmin } from "./src/lib/supabaseServer";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -22,12 +22,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (password.length < 6) return null;
 
         if (mode === "register") {
-          const { data, error } = await supabaseAdmin.auth.admin.createUser({
-            email,
-            password,
-            user_metadata: { username },
-            email_confirm: true,
-          });
+          const { data, error } =
+            await getSupabaseAdmin().auth.admin.createUser({
+              email,
+              password,
+              user_metadata: { username },
+              email_confirm: true,
+            });
 
           if (error || !data.user) return null;
 
@@ -38,10 +39,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           };
         }
 
-        const { data, error } = await supabaseAdmin.auth.signInWithPassword({
-          email,
-          password,
-        });
+        const { data, error } =
+          await getSupabaseAdmin().auth.signInWithPassword({
+            email,
+            password,
+          });
 
         if (error || !data.user) return null;
 
