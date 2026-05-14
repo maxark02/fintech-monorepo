@@ -11,8 +11,8 @@ export const navItems = [
   },
 
   {
-    label: "Profile",
-    href: "/dashboard/profile",
-    icon: "profile",
+    label: "Notifications",
+    href: "/dashboard/notifications",
+    icon: "notifications",
   },
 ] as const;
