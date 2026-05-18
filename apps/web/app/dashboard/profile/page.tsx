@@ -66,6 +66,7 @@ export default function ProfilePage() {
   const cardCount = balance?.cards?.length ?? 0;
 
   const username = session?.user?.name ?? "User";
+  const shortUsername = username[0] ?? "U";
   const email = session?.user?.email ?? "";
 
   return (
@@ -98,7 +99,7 @@ export default function ProfilePage() {
           <div className="flex items-center gap-4 mb-6">
             <div className="relative">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
-                <span className="text-2xl text-white">MA</span>
+                <span className="text-2xl text-white">{shortUsername}</span>
               </div>
               <button className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-background">
                 <Camera size={14} className="text-white" />

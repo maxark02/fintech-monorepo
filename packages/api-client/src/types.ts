@@ -56,4 +56,5 @@ export type Card = {
   type: "credit" | "debit";
   network: "Visa" | "Mastercard" | null;
   lastFour: string;
+  balance: number;
 };
