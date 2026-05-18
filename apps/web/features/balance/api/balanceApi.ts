@@ -36,6 +36,7 @@ export const getBalance = async (): Promise<Balance> => {
         type: "credit",
         network: "Visa",
         lastFour: "3456",
+        balance: 1245500,
       },
       {
         id: "2",
@@ -43,6 +44,7 @@ export const getBalance = async (): Promise<Balance> => {
         type: "credit",
         network: "Visa",
         lastFour: "3456",
+        balance: 890300,
       },
     ],
   };
