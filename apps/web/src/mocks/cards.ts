@@ -7,6 +7,7 @@ export const MOCK_CARDS: Card[] = [
     type: "credit",
     network: "Mastercard",
     lastFour: "9903",
+    balance: 1245500,
   },
   {
     id: "debit",
@@ -14,5 +15,6 @@ export const MOCK_CARDS: Card[] = [
     type: "credit",
     network: "Visa",
     lastFour: "3456",
+    balance: 890300,
   },
 ];
