@@ -123,11 +123,6 @@ export default function BalancePage() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          <button className="relative w-9 h-9 rounded-full bg-[#1c1c22] flex items-center justify-center text-white">
-            <NavIcon name="bell" className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
-
           <Link href="/dashboard/settings">
             {" "}
             <button className="w-9 h-9 rounded-full bg-[#1c1c22] flex items-center justify-center text-white">
