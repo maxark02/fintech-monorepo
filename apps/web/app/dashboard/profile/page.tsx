@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useBalance } from "../../../features/balance/hooks/useBalance";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { Skeleton } from "@fin/ui";
 
 export default function ProfilePage() {
   const menuItems = [
@@ -106,7 +107,13 @@ export default function ProfilePage() {
               </button>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl mb-1">{username}</h2>
+              <h2 className="text-xl mb-1">
+                {session ? (
+                  <div className="w-5">{username}</div>
+                ) : (
+                  <Skeleton className="w-24 h-5" />
+                )}
+              </h2>
               <p className="text-muted-foreground text-sm">{email}</p>
             </div>
           </div>
