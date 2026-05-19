@@ -46,44 +46,30 @@ const CARD_GRADIENTS: Record<string, string> = {
   "1": "linear-gradient(135deg, #0f1a35 0%, #1c1c22 100%)",
   "2": "linear-gradient(135deg, #0f1a35 0%, #252530 100%)",
 };
-
 export default function CardsPage() {
   const { balance, isLoading } = useBalance();
 
+  const totalCardBalance =
+    balance?.cards.reduce((sum, card) => sum + card.balance, 0) ?? 0;
+
+  const card1Balance = balance?.cards.find((c) => c.id === "1")?.balance ?? 0;
+  const card2Balance = balance?.cards.find((c) => c.id === "2")?.balance ?? 0;
+
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
-      <PageHeader
-        title="My Cards"
-        rightElement={
-          <button className="w-9 h-9 rounded-full bg-[#3b5bdb] flex items-center justify-center text-white">
-            <NavIcon name="plus" className="w-5 h-5" />
-          </button>
-        }
-      />
-
       <div className="bg-[#1c1c22] rounded-2xl p-4">
         <p className="text-white/50 text-xs mb-1">Total Balance on Cards</p>
         <p className="text-white text-2xl font-bold mb-4">
-          {isLoading ? "..." : `₩${balance?.total.toLocaleString("ko-KR")}`}
+          {isLoading ? "..." : `₩${totalCardBalance.toLocaleString("ko-KR")}`}
         </p>
-        <div className="grid grid-cols-2 gap-3">
-          <button className="bg-[#3b5bdb] text-white rounded-xl py-2.5 text-sm font-semibold">
-            Top Up
-          </button>
-          <button className="bg-[#252530] text-white rounded-xl py-2.5 text-sm font-semibold">
-            Transfer
-          </button>
-        </div>
+        ...
       </div>
 
       {(balance?.cards ?? []).map((card) => (
         <CardItem
           key={card.id}
           card={card}
-          gradient={
-            CARD_GRADIENTS[card.id] ??
-            "linear-gradient(135deg, #1c1c22 0%, #252530 100%)"
-          }
+          gradient={CARD_GRADIENTS[card.id] ?? "..."}
         />
       ))}
     </div>
