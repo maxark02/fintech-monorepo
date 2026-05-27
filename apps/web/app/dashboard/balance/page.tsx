@@ -18,12 +18,12 @@ export default function BalancePage() {
           </div>
           <Link href="/dashboard/profile">
             {session ? (
+              <Skeleton className={"w-30 h-5"} />
+            ) : (
               <div>
                 <p className="text-white/50 text-xs">Welcome back,</p>
                 <p className="text-white font-bold text-sm">{username}</p>
               </div>
-            ) : (
-              <Skeleton className="w-30 h-6" />
             )}
           </Link>
         </div>
@@ -43,14 +43,12 @@ export default function BalancePage() {
           <button className="w-45 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
             <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
           </button>
-          <span className="text-white/70 text-xs">Send</span>
         </div>
         <Link href="/dashboard/cards">
           <div className="flex flex-col items-center gap-2">
             <button className="w-45 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
               <NavIcon name="card" className="w-6 h-6 text-blue-400" />
             </button>
-            <span className="text-white/70 text-xs">Cards</span>
           </div>
         </Link>
       </div>
