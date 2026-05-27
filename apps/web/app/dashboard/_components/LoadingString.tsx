@@ -56,7 +56,7 @@ const MESSAGES = ["Transaction processing...", "Transaction completed"];
 
 export function TextStatesSwap() {
   const [index, setIndex] = useState(0);
-  const ref = useRef(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const busy = useRef(false);
 
   const next = () => {
@@ -91,9 +91,9 @@ export function TextStatesSwap() {
   );
 }
 
-function readMs(name, fallback) {
+function readMs(username: string, fallback: number): number {
   const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
+    .getPropertyValue(username)
     .trim();
   const n = parseFloat(raw);
   return Number.isFinite(n) ? n : fallback;

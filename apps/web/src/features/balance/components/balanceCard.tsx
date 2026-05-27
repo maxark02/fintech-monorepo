@@ -1,9 +1,9 @@
 "use client";
 
-import { NavIcon } from "../../../app/dashboard/_components/nav-icon";
-import { useBalance } from "../hooks/useBalance";
+import { NavIcon } from "../../../../app/dashboard/_components/nav-icon";
+import { useBalance } from "@/features/balance/hooks/useBalance";
 import { Skeleton } from "@fin/ui";
-import { NumberPopIn } from "../../../app/dashboard/_components/NumberPopIn";
+import { NumberPopIn } from "../../../../app/dashboard/_components/NumberPopIn";
 
 export function BalanceCard() {
   const { balance } = useBalance();

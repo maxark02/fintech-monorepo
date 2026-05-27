@@ -1,6 +1,6 @@
 "use client";
 
-import { useNotifications } from "../../../../features/notifications/hooks/useNotifications";
+import { useNotifications } from "@/features/notifications/useNotifications";
 
 export default function NotificationsPage() {
   const { notifications, isLoading } = useNotifications();
