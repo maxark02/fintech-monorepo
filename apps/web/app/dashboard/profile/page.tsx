@@ -13,7 +13,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useBalance } from "../../../features/balance/hooks/useBalance";
+import { useBalance } from "@/features/balance/hooks/useBalance";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { Skeleton } from "@fin/ui";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Card } from "@fin/api-client";
 import { NavIcon } from "../_components/nav-icon";
-import { useBalance } from "../../../features/balance/hooks/useBalance";
+import { useBalance } from "@/features/balance/hooks/useBalance";
 
 function CardItem({ card, gradient }: { card: Card; gradient: string }) {
   const [showNumber, setShowNumber] = useState(false);
