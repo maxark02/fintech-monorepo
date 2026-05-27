@@ -10,21 +10,16 @@ export const useAuth = () => {
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
-    const { user, token } = await loginApi(email, password);
-    setUser(user, token);
+    const user = await loginApi(email, password);
+    setUser(user);
     router.push("/dashboard/balance");
   };
 
-  const handleRegister = async (
-    username: string,
-    email: string,
-    password: string,
-  ) => {
-    const { user, token } = await registerApi(username, email, password);
-    setUser(user, token);
+  const handleRegister = async (username: string, email: string) => {
+    const user = await registerApi(username, email);
+    setUser(user);
     router.push("/dashboard/balance");
   };
-
   return {
     login: handleLogin,
     register: handleRegister,
