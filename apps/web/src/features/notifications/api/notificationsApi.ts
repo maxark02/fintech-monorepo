@@ -1,5 +1,5 @@
 import { NOTIFICATIONS } from "@/mocks/notifications";
-import { Notification } from "../../../../../packages/api-client/src";
+import { Notification } from "@fin/api-client";
 
 export const getNotifications = async (): Promise<Notification[]> => {
   return NOTIFICATIONS;
