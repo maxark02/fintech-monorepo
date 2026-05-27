@@ -30,6 +30,7 @@ export function Sidebar() {
               }`}
           >
             <NavIcon name={item.icon} className="w-5 h-5 shrink-0" />
+            {item.label}
           </Link>
         );
       })}

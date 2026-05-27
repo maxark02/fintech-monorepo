@@ -1,21 +1,20 @@
-"use client"
+"use client";
 
-import { usePathname } from "next/navigation"
-import { navItems } from "./nav-items"
+import { usePathname } from "next/navigation";
 
 const pageTitles: Record<string, string> = {
   "/dashboard/balance": "Balance",
   "/dashboard/portfolio": "Portfolio",
   "/dashboard/transactions": "Transactions",
-}
+  "/dashboard/notifications": "Notifications",
+};
 
 export function Header() {
-  const pathname = usePathname()
-  const title = pageTitles[pathname] ?? "Dashboard"
+  const pathname = usePathname();
+  const title = pageTitles[pathname] ?? "Dashboard";
 
   return (
     <header className="flex items-center justify-between px-4 py-4 md:px-8 border-b border-white/10">
-
       {/* Логотип — только на десктопе (на мобильном его показывает Sidebar) */}
 
       <div className="flex items-center gap-3">
@@ -35,5 +34,5 @@ export function Header() {
         </button>
       </div>
     </header>
-  )
+  );
 }

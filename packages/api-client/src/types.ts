@@ -58,3 +58,12 @@ export type Card = {
   lastFour: string;
   balance: number;
 };
+
+export type Notification = {
+  id: string;
+  title: string;
+  message: string;
+  type: "transaction" | "security" | "promo" | "system";
+  isRead: boolean;
+  createdAt: string;
+};

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Card } from "@fin/api-client";
-import { PageHeader } from "../_components/PageHeader";
 import { NavIcon } from "../_components/nav-icon";
 import { useBalance } from "../../../features/balance/hooks/useBalance";
 
