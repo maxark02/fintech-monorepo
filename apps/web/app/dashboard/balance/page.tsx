@@ -40,14 +40,14 @@ export default function BalancePage() {
 
       <div className="grid grid-cols-2">
         <div className="flex flex-col items-center">
-          <button className="w-48 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
+          <button className="w-45 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
             <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
           </button>
           <span className="text-white/70 text-xs">Send</span>
         </div>
         <Link href="/dashboard/cards">
           <div className="flex flex-col items-center gap-2">
-            <button className="w-48 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
+            <button className="w-45 h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center">
               <NavIcon name="card" className="w-6 h-6 text-blue-400" />
             </button>
             <span className="text-white/70 text-xs">Cards</span>
