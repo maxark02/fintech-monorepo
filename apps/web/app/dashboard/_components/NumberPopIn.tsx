@@ -54,7 +54,7 @@ export function NumberPopIn({ value }: { value: any }) {
       onClick={replay}
       style={{ cursor: "pointer" }}
     >
-      {value.split("").map((ch, i) => (
+      {value.split("").map((ch: string, i: number) => (
         <span
           key={i}
           className="t-digit"
