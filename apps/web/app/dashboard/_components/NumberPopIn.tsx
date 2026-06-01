@@ -40,7 +40,7 @@ if (
   document.head.appendChild(style);
 }
 
-export function NumberPopIn({ value }: { value: string }) {
+export function NumberPopIn({ value }: { value: any }) {
   const [playing, setPlaying] = useState(true);
 
   const replay = () => {

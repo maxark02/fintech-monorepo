@@ -7,7 +7,7 @@ import { Skeleton } from "@fin/ui";
 
 export default function BalancePage() {
   const { data: session } = useSession();
-  const username = session?.user?.name ?? "User";
+  const username = session?.user?.name;
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
@@ -17,11 +17,12 @@ export default function BalancePage() {
             <Link href="/dashboard/profile">M</Link>
           </div>
           <Link href="/dashboard/profile">
+            <p className="text-white/50 text-xs">Welcome back,</p>
+
             {session ? (
               <Skeleton className={"w-30 h-5"} />
             ) : (
               <div>
-                <p className="text-white/50 text-xs">Welcome back,</p>
                 <p className="text-white font-bold text-sm">{username}</p>
               </div>
             )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Transaction } from "@fin/api-client";
+import { NumberPopIn } from "../../../../app/dashboard/_components/NumberPopIn";
 
 type TransactionListProps = {
   transactions: Transaction[];
@@ -16,10 +17,11 @@ export function TransactionList({ transactions }: TransactionListProps) {
         >
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-sm truncate">
-              {transaction.title} {transaction.emoji}
+              <NumberPopIn value={transaction.title} />
             </p>
             <p className="text-white/50 text-xs">
-              {transaction.category} · {transaction.date}
+              <NumberPopIn value={transaction.category} /> ·
+              <NumberPopIn value={transaction.date} />
             </p>
           </div>
           <p
@@ -27,8 +29,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
               transaction.type === "income" ? "text-green-400" : "text-red-400"
             }`}
           >
-            {transaction.type === "income" ? "+" : "-"}₩
-            {Math.abs(transaction.amount).toLocaleString("ko-KR")}
+            <NumberPopIn
+              value={`${transaction.type === "income" ? "+" : "-"}₩${Math.abs(transaction.amount).toLocaleString("ko-KR")}`}
+            />
           </p>
         </div>
       ))}

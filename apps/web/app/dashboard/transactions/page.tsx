@@ -5,6 +5,8 @@ import { NavIcon } from "../_components/nav-icon";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { TransactionList } from "@/features/transactions/";
 import { useState } from "react";
+import { Skeleton } from "@fin/ui";
+import { NumberPopIn } from "../_components/NumberPopIn";
 
 export default function TransactionsPage() {
   const { data, isLoading } = useTransactions();
@@ -83,7 +85,11 @@ export default function TransactionsPage() {
             <span className="text-white/50 text-xs">Income</span>
           </div>
           <p className="text-white font-bold text-base">
-            {isLoading ? "..." : `₩${totalIncome.toLocaleString("ko-KR")}`}
+            {isLoading ? (
+              <Skeleton className="w-20 h-5" />
+            ) : (
+              <NumberPopIn value={totalIncome.toLocaleString("ko-KR")} />
+            )}
           </p>
         </div>
         <div className="bg-[#1c1c22] rounded-2xl p-4">
@@ -94,7 +100,11 @@ export default function TransactionsPage() {
             <span className="text-white/50 text-xs">Expense</span>
           </div>
           <p className="text-white font-bold text-base">
-            {isLoading ? "..." : `₩${totalExpense.toLocaleString("ko-KR")}`}
+            {isLoading ? (
+              <Skeleton className="w-20 h-5" />
+            ) : (
+              <NumberPopIn value={totalExpense.toLocaleString("ko-KR")} />
+            )}
           </p>
         </div>
       </div>

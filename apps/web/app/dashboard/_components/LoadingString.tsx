@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 // ── Styles ──────────────────────────────────────────────
 // Auto-injected on first import. Idempotent (guarded by
@@ -54,40 +55,32 @@ if (
 // Three-phase text swap: exit old ->  swap text ->  enter new.
 const MESSAGES = ["Transaction processing...", "Transaction completed"];
 
-export function TextStatesSwap() {
-  const [index, setIndex] = useState(0);
+export function LoadingString({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const busy = useRef(false);
 
-  const next = () => {
-    if (busy.current) return;
+  const prevValue = useRef(value);
+
+  useEffect(() => {
+    if (prevValue.current === value) return;
     const el = ref.current;
     if (!el) return;
-    busy.current = true;
-    const dur = readMs("--text-swap-dur", 200);
+
+    const dur = readMs("--text-swap-dur", 150);
 
     el.classList.add("is-exit");
-    window.setTimeout(() => {
-      setIndex((i) => (i + 1) % MESSAGES.length);
-
-      // Jump below (no transition), then release so it animates back.
+    setTimeout(() => {
+      prevValue.current = value;
       el.classList.remove("is-exit");
       el.classList.add("is-enter-start");
-      void el.offsetWidth; // force reflow
+      void el.offsetWidth;
       el.classList.remove("is-enter-start");
-      busy.current = false;
     }, dur);
-  };
+  }, [value]);
 
   return (
-    <>
-      <span className="t-text-swap" ref={ref}>
-        {MESSAGES[index]}
-      </span>
-      <button type="button" onClick={next}>
-        Next
-      </button>
-    </>
+    <span className="t-text-swap" ref={ref}>
+      {value}
+    </span>
   );
 }
 
