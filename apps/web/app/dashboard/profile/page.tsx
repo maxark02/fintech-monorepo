@@ -1,5 +1,7 @@
 "use client";
 
+import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
+
 export const dynamic = "force-dynamic";
 
 import {
@@ -113,29 +115,43 @@ export default function ProfilePage() {
                 {!isAuthenticated ? (
                   <Skeleton className="w-24 h-5" />
                 ) : (
-                  username
+                  <NumberPopIn value={username} />
                 )}
               </h2>
-              <span className="text-muted-foreground text-sm">{email}</span>
+              <span className="text-muted-foreground text-sm">
+                <NumberPopIn value={email} />
+              </span>
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
             <div className="text-center">
-              <div className="text-xl mb-1">
-                {isLoading
-                  ? "..."
-                  : `₩${balance?.total.toLocaleString("ko-KR")}`}
+              <div className="text-xl mb-1 flex items-center justify-center gap-0.5">
+                {isLoading ? (
+                  "..."
+                ) : (
+                  <>
+                    <span>₩</span>
+                    {/* Передаем только число, либо уже отформатированное число без знака */}
+                    <NumberPopIn
+                      value={balance?.total.toLocaleString("ko-KR") ?? "0"}
+                    />
+                  </>
+                )}
               </div>
               <div className="text-sm text-muted-foreground">Total Balance</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl mb-1">{cardCount}</div>
+              <div className="text-2xl mb-1">
+                <NumberPopIn value={String(cardCount)} />
+              </div>
               <div className="text-sm text-muted-foreground">Cards</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl mb-1">{transactionCount}</div>
+              <div className="text-2xl mb-1">
+                <NumberPopIn value={String(transactionCount)} />
+              </div>
               <div className="text-sm text-muted-foreground">Transactions</div>
             </div>
           </div>

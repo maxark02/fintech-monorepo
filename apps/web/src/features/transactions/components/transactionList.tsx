@@ -17,11 +17,10 @@ export function TransactionList({ transactions }: TransactionListProps) {
         >
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-sm truncate">
-              <NumberPopIn value={transaction.title} />
+              {transaction.title}
             </p>
             <p className="text-white/50 text-xs">
-              <NumberPopIn value={transaction.category} /> ·
-              <NumberPopIn value={transaction.date} />
+              {transaction.category} · {transaction.date}
             </p>
           </div>
           <p
@@ -29,9 +28,7 @@ export function TransactionList({ transactions }: TransactionListProps) {
               transaction.type === "income" ? "text-green-400" : "text-red-400"
             }`}
           >
-            <NumberPopIn
-              value={`${transaction.type === "income" ? "+" : "-"}₩${Math.abs(transaction.amount).toLocaleString("ko-KR")}`}
-            />
+            {`${transaction.type === "income" ? "+" : "-"}₩${Math.abs(transaction.amount).toLocaleString("ko-KR")}`}
           </p>
         </div>
       ))}
