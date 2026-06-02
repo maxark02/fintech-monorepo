@@ -1,6 +1,6 @@
 "use client";
 
-import { PageHeader } from "../_components/PageHeader";
+import { PageHeader } from "#/app/dashboard/_components/PageHeader";
 import { NavIcon } from "../_components/nav-icon";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { TransactionList } from "@/features/transactions/";

@@ -58,7 +58,7 @@ export default function ProfilePage() {
     },
   ];
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const { balance, isLoading } = useBalance();
 
@@ -66,9 +66,14 @@ export default function ProfilePage() {
 
   const cardCount = balance?.cards?.length ?? 0;
 
-  const username = session?.user?.name ?? "User";
-  const shortUsername = username[0] ?? "U";
-  const email = session?.user?.email ?? "";
+  const username = session?.user?.name ?? "T";
+  const shortUsername = username[0];
+  const email = session?.user?.email ?? "user@example.com";
+
+  if (status === "loading")
+    return <p className="flex justify-center ">Loading...</p>;
+  if (status === "unauthenticated")
+    return <p className="flex justify-center  ">Not logged yet</p>;
 
   return (
     <div className="dark text-foreground h-screen">
@@ -84,7 +89,7 @@ export default function ProfilePage() {
             </Link>
             <h1>Profile</h1>
             <Link
-              href="/settings"
+              href="/settingsProfile"
               className="text-blue-600 hover:text-blue-700 transition-colors"
             >
               Edit
@@ -108,13 +113,9 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <h2 className="text-xl mb-1">
-                {session ? (
-                  <div className="w-5">{username}</div>
-                ) : (
-                  <Skeleton className="w-24 h-5" />
-                )}
+                {session ? <Skeleton className="w-24 h-5" /> : username}
               </h2>
-              <p className="text-muted-foreground text-sm">{email}</p>
+              <span className="text-muted-foreground text-sm">{email}</span>
             </div>
           </div>
 
