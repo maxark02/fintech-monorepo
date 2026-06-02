@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import {
   ArrowLeft,
   Camera,
@@ -14,9 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useBalance } from "@/features/balance/hooks/useBalance";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
 import { Skeleton } from "@fin/ui";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function ProfilePage() {
   const menuItems = [
@@ -58,20 +59,17 @@ export default function ProfilePage() {
     },
   ];
 
-  const { data: session, status } = useSession();
-
+  // Достаем данные и метод логаута из нашего Zustand-хука
+  const { user, isAuthenticated, logout } = useAuth();
   const { balance, isLoading } = useBalance();
 
   const transactionCount = balance?.transactions?.length ?? 0;
-
   const cardCount = balance?.cards?.length ?? 0;
 
-  const username = session?.user?.name ?? "T";
-  const shortUsername = username[0];
-  const email = session?.user?.email ?? "user@example.com";
-
-  if (status === "loading")
-    return <p className="flex justify-center ">Loading...</p>;
+  // Безопасно вытаскиваем username из Zustand
+  const username = user?.username ?? "User";
+  const shortUsername = username ? username[0].toUpperCase() : "U";
+  const email = user?.email ?? "user@example.com";
 
   return (
     <div className="dark text-foreground h-screen">
@@ -97,9 +95,9 @@ export default function ProfilePage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-3xl mx-auto  md:px-6 py-6 pb-24 md:pb-6">
+      <main className="max-w-3xl mx-auto md:px-6 py-6 pb-24 md:pb-6">
         {/* Profile Card */}
-        <div className="bg-[#1c1c22]  rounded-3xl p-6 mb-4">
+        <div className="bg-[#1c1c22] rounded-3xl p-6 mb-4">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
@@ -111,7 +109,12 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <h2 className="text-xl mb-1">
-                {session ? <Skeleton className="w-24 h-5" /> : username}
+                {/* Заменили рушащий сборку session на проверку авторизации */}
+                {!isAuthenticated ? (
+                  <Skeleton className="w-24 h-5" />
+                ) : (
+                  username
+                )}
               </h2>
               <span className="text-muted-foreground text-sm">{email}</span>
             </div>
@@ -161,9 +164,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Logout Button */}
-
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={logout}
           className="w-full flex items-center justify-center gap-2 bg-red-600/10 border border-red-600/30 text-red-600 rounded-2xl py-4 hover:bg-red-600/20 transition-colors"
         >
           <LogOut size={20} />
