@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { NavIcon } from "../_components/nav-icon";
 import { BalanceCard } from "@/features/balance";
