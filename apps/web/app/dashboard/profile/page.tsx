@@ -72,8 +72,6 @@ export default function ProfilePage() {
 
   if (status === "loading")
     return <p className="flex justify-center ">Loading...</p>;
-  if (status === "unauthenticated")
-    return <p className="flex justify-center  ">Not logged yet</p>;
 
   return (
     <div className="dark text-foreground h-screen">
