@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr"; // 🌟 Импортируем правильный клиент для браузера
 import { useAuthStore } from "../store/authStore";
 
 export const useAuth = () => {
@@ -15,7 +15,14 @@ export const useAuth = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Ждем гидратации Zustand стора, чтобы не было конфликтов SSR
+  // 🌟 Инициализируем клиент Supabase, который нативно умеет работать с куками и сессией Next.js
+  const [supabase] = useState(() =>
+    createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    ),
+  );
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
@@ -39,10 +46,7 @@ export const useAuth = () => {
             data.user.email?.split("@")[0] ||
             "User",
           email: data.user.email || email,
-          avatarUrl:
-            data.user.user_metadata.avatar_url ||
-            data.user.user_metadata.avatarUrl ||
-            "",
+          avatarUrl: data.user.user_metadata.avatar_url || "",
         } as any);
 
         router.push("/dashboard/balance");
@@ -75,7 +79,6 @@ export const useAuth = () => {
       if (error) throw error;
 
       if (data?.user) {
-        // Записываем данные в Zustand
         setUser({
           id: data.user.id,
           username: data.user.user_metadata.username || username,
@@ -83,14 +86,10 @@ export const useAuth = () => {
           avatarUrl: "",
         } as any);
 
-        // Если Supabase сразу выдал сессию (Email confirmation выключен) — пускаем в систему
         const { data: sessionCheck } = await supabase.auth.getSession();
         if (sessionCheck?.session) {
           router.push("/dashboard/balance");
         } else {
-          alert(
-            "Регистрация успешна! Пожалуйста, проверьте почту для подтверждения аккаунта.",
-          );
           router.push("/login");
         }
       }
@@ -100,7 +99,7 @@ export const useAuth = () => {
   };
 
   /**
-   * ОБНОВЛЕНИЕ ПРОФИЛЯ (Без дубликатов и с правильным маппингом)
+   * ОБНОВЛЕНИЕ ПРОФИЛЯ
    */
   const handleUpdateProfile = async (updates: {
     username?: string;
@@ -108,19 +107,18 @@ export const useAuth = () => {
     avatarUrl?: string;
   }) => {
     try {
-      // Шаг 1: Принудительно проверяем и обновляем сессию клиента перед запросом
+      // 🌟 Теперь этот вызов гарантированно найдет сессию в браузере!
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
 
       if (sessionError || !sessionData.session) {
-        console.warn("Session missing in getSession, trying getUser...");
+        // Пробуем получить пользователя напрямую через токен
         const { data: userData } = await supabase.auth.getUser();
         if (!userData.user) {
           throw new Error("Auth session missing! Please re-login.");
         }
       }
 
-      // Шаг 2: Формируем тело запроса для Supabase
       const supabaseAttributes: any = {};
       if (updates.password) supabaseAttributes.password = updates.password;
 
@@ -129,22 +127,17 @@ export const useAuth = () => {
         if (updates.username)
           supabaseAttributes.data.username = updates.username;
         if (updates.avatarUrl)
-          supabaseAttributes.data.avatar_url = updates.avatarUrl; // Строго snake_case для базы
+          supabaseAttributes.data.avatar_url = updates.avatarUrl;
       }
 
-      // Шаг 3: Отправляем апдейт в Supabase
       const { data, error } =
         await supabase.auth.updateUser(supabaseAttributes);
       if (error) throw error;
 
-      // Шаг 4: Если всё ок, синхронизируем данные с локальным Zustand стором
       if (data?.user) {
         updateUserStore({
           username: data.user.user_metadata.username || updates.username,
-          avatarUrl:
-            data.user.user_metadata.avatar_url ||
-            data.user.user_metadata.avatarUrl ||
-            updates.avatarUrl,
+          avatarUrl: data.user.user_metadata.avatar_url || updates.avatarUrl,
         });
       }
       return { success: true };
@@ -155,7 +148,7 @@ export const useAuth = () => {
   };
 
   /**
-   * ВЫХОД ИЗ СИСТЕМЫ
+   * ВЫХОД
    */
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -170,6 +163,6 @@ export const useAuth = () => {
     updateProfile: handleUpdateProfile,
     isAuthenticated: isHydrated ? storeIsAuthenticated : false,
     user: isHydrated ? storeUser : null,
-    supabase,
+    supabase, // Отдаем этот же рабочий инстанс наружу
   };
 };
