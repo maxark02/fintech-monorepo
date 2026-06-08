@@ -29,6 +29,7 @@ export const useAuth = () => {
       if (error) throw error;
       if (data?.user) {
         setUser({
+          id: data.id,
           username:
             data.user.user_metadata.username ||
             data.user.email?.split("@")[0] ||
@@ -46,8 +47,32 @@ export const useAuth = () => {
 
   const handleRegister = async (username: string, email: string) => {
     try {
-      setUser({ username, email, avatarUrl: "" });
-      router.push("/dashboard/balance");
+      // 1. Регистрируем пользователя в Supabase Auth.
+      // Передаем username в user_metadata, чтобы Supabase его запомнил
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: "временный_пароль_или_из_формы", // Сюда нужно передавать пароль из вашей формы регистрации
+        options: {
+          data: {
+            username: username,
+            avatar_url: "",
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.user) {
+        // 2. Теперь у нас есть НАСТОЯЩИЙ data.user.id от Supabase!
+        setUser({
+          id: data.user.id, // 🌟 Передаем реальный id, TypeScript доволен
+          username: data.user.user_metadata.username || username,
+          email: data.user.email || email,
+          avatarUrl: "",
+        });
+
+        router.push("/dashboard/balance");
+      }
     } catch (error) {
       console.error("Registration failed:", error);
     }
