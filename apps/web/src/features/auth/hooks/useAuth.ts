@@ -15,28 +15,27 @@ export const useAuth = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // 🌟 БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ ДЛЯ CI/CD СБОРКИ
   const [supabase] = useState(() => {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    // Если переменных нет (на сервере сборки CI), возвращаем заглушку, чтобы билд не падал
     if (!url || !key || !url.startsWith("http")) {
       return new Proxy(
         {},
         {
-          get: () => () => {
-            console.warn(
-              "Supabase вызван во время статической сборки без ENV.",
-            );
-            return Promise.resolve({ data: null, error: null });
-          },
+          get: () => () => Promise.resolve({ data: null, error: null }),
         },
       ) as any;
     }
 
-    // Если мы в браузере и переменные на месте — создаем реальный клиент
-    return createBrowserClient(url, key);
+    // 🌟 Настраиваем createBrowserClient на работу со стандартными куками
+    return createBrowserClient(url, key, {
+      auth: {
+        flowType: "pkce",
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    });
   });
 
   useEffect(() => {
