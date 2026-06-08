@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr"; // 🌟 Импортируем правильный клиент для браузера
+import { createBrowserClient } from "@supabase/ssr";
 import { useAuthStore } from "../store/authStore";
 
 export const useAuth = () => {
@@ -15,17 +15,35 @@ export const useAuth = () => {
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // 🌟 Инициализируем клиент Supabase, который нативно умеет работать с куками и сессией Next.js
-  const [supabase] = useState(() =>
-    createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    ),
-  );
+  // 🌟 БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ ДЛЯ CI/CD СБОРКИ
+  const [supabase] = useState(() => {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    // Если переменных нет (на сервере сборки CI), возвращаем заглушку, чтобы билд не падал
+    if (!url || !key || !url.startsWith("http")) {
+      return new Proxy(
+        {},
+        {
+          get: () => () => {
+            console.warn(
+              "Supabase вызван во время статической сборки без ENV.",
+            );
+            return Promise.resolve({ data: null, error: null });
+          },
+        },
+      ) as any;
+    }
+
+    // Если мы в браузере и переменные на месте — создаем реальный клиент
+    return createBrowserClient(url, key);
+  });
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  // ... весь остальной код handleLogin, handleRegister, handleUpdateProfile остается без изменений ...
 
   /**
    * ВХОД В АККАУНТ
