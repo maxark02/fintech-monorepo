@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { useAuth } from "@/features/auth/hooks/useAuth"; // 🌟 Импортируем наш рабочий Supabase-хук
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,26 +15,31 @@ export default function RegisterPage() {
     password: "",
   });
 
+  // 🌟 Достаем метод register из нашего Supabase-хука
+  const { register } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      username: formData.name,
-      email: formData.email,
-      password: formData.password,
-      mode: "register",
-      redirect: false,
-    });
-
-    if (result?.error) {
+    try {
+      // 🌟 Регистрируем пользователя напрямую в Supabase Auth.
+      // Хук сам добавит имя в метаданные, наполнит Zustand и перенаправит на баланс
+      await register(formData.name, formData.email, formData.password);
+    } catch (err: any) {
       setError("Registration failed. Try a different email.");
       setIsLoading(false);
-      return;
     }
+  };
 
-    window.location.href = "/dashboard/balance";
+  // 🌟 Социальные сети пока оставляем заглушками (при желании можно будет подключить через Supabase OAuth)
+  const handleGoogleSignIn = () => {
+    console.log("Google Auth через Supabase пока не настроен");
+  };
+
+  const handleAppleSignIn = () => {
+    console.log("Apple Auth через Supabase пока не настроен");
   };
 
   return (
@@ -51,6 +56,7 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name Input */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Full Name
@@ -73,6 +79,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Email Input */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Email
@@ -95,6 +102,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Password Input */}
           <div>
             <label className="text-sm text-muted-foreground mb-2 block">
               Password
@@ -124,6 +132,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Terms checkbox */}
           <div className="flex items-start gap-3">
             <input
               type="checkbox"
@@ -138,6 +147,7 @@ export default function RegisterPage() {
 
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
@@ -147,21 +157,32 @@ export default function RegisterPage() {
           </button>
         </form>
 
+        {/* Divider */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-border"></div>
           <span className="text-sm text-muted-foreground">or</span>
           <div className="flex-1 h-px bg-border"></div>
         </div>
 
+        {/* Social Login */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <button className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors">
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
+          >
             <span>Google</span>
           </button>
-          <button className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors">
+          <button
+            type="button"
+            onClick={handleAppleSignIn}
+            className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
+          >
             <span>Apple</span>
           </button>
         </div>
 
+        {/* Login Link */}
         <div className="text-center">
           <p className="text-muted-foreground">
             Already have an account?{" "}

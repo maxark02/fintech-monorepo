@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { useAuth } from "@/features/auth/hooks/useAuth"; // 🌟 Импортируем наш рабочий хук
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,32 +15,30 @@ export default function LoginPage() {
     password: "",
   });
 
+  // 🌟 Достаем метод login из нашего Supabase-хука
+  const { login } = useAuth();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      email: formData.email,
-      password: formData.password,
-      redirect: false,
-    });
-
-    if (result?.error) {
+    try {
+      // 🌟 Логинимся напрямую в Supabase. Хук сам запишет токены в localStorage и сделает редирект на /dashboard/balance
+      await login(formData.email, formData.password);
+    } catch (err: any) {
       setError("Invalid email or password");
       setIsLoading(false);
-      return;
     }
-
-    window.location.href = "/dashboard/balance";
   };
 
+  // 🌟 Социальные сети пока можно оставить пустыми заглушками, либо потом подключить через Supabase OAuth
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard/balance" });
+    console.log("Google Auth через Supabase пока не настроен");
   };
 
   const handleAppleSignIn = () => {
-    signIn("apple", { callbackUrl: "/dashboard/balance" });
+    console.log("Apple Auth через Supabase пока не настроен");
   };
 
   return (
@@ -129,7 +127,7 @@ export default function LoginPage() {
             </div>
             <Link
               href="#"
-              className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-sm hesitate text-blue-600 hover:text-blue-700 transition-colors"
             >
               Forgot password?
             </Link>
@@ -139,16 +137,14 @@ export default function LoginPage() {
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           {/* Submit Button */}
-
-          <Link href="/dashboard/balance">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 mt-6 disabled:opacity-50"
-            >
-              {isLoading ? "Signing in..." : "Sign In"}
-            </button>
-          </Link>
+          {/* 🌟 Убрали тег <Link>, теперь кнопка нормально отправляет форму по onSubmit */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-4 rounded-2xl transition-all shadow-lg shadow-blue-600/20 mt-6 disabled:opacity-50"
+          >
+            {isLoading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
 
         {/* Divider */}
