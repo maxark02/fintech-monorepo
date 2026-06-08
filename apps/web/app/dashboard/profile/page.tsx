@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react"; // 🌟 Добавили
-import { createBrowserClient } from "@supabase/ssr"; // 🌟 Добавили
+import { useEffect, useState } from "react"; // 🌟 Добавили useState для отслеживания ошибок картинок
+import { createBrowserClient } from "@supabase/ssr";
 import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
 
 export const dynamic = "force-dynamic";
@@ -24,13 +24,14 @@ import { Skeleton } from "@fin/ui";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function ProfilePage() {
-  // 🌟 НАШ ТЕСТ СУПАБЕЙЗА НА СТРАНИЦЕ ПРОФИЛЯ
+  const [imageError, setImageError] = useState(false); // 🌟 Состояние на случай, если ссылка на аватарку битая
+
+  // ТЕСТ СУПАБЕЙЗА НА СТРАНИЦЕ ПРОФИЛЯ
   useEffect(() => {
     const testSupabase = async () => {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-      // Защита для сборки (CI/CD)
       if (!url || !key) {
         console.warn("Тест пропущен: нет ENV переменных на сервере.");
         return;
@@ -106,6 +107,16 @@ export default function ProfilePage() {
   const shortUsername = username ? username[0].toUpperCase() : "U";
   const email = user?.email ?? "user@example.com";
 
+  // 🌟 СТРОИМ ПУБЛИЧНЫЙ URL ДЛЯ АВАТАРКИ ИЗ СУПАБЕЙЗ
+  // Если в поле avatarUrl лежит только имя файла, мы склеиваем его с URL твоего бакета
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const fullAvatarUrl =
+    user?.avatarUrl && supabaseUrl
+      ? user.avatarUrl.startsWith("http")
+        ? user.avatarUrl
+        : `${supabaseUrl}/storage/v1/object/public/avatars/${user.avatarUrl}`
+      : null;
+
   return (
     <div className="dark text-foreground h-screen ">
       {/* Header */}
@@ -119,7 +130,6 @@ export default function ProfilePage() {
               <ArrowLeft size={20} />
             </Link>
             <h1>Profile</h1>
-            {/* 🌟 Ссылка Edit ведет на страницу настроек вашего Toss-клона */}
             <Link
               href="/dashboard/settingsProfile"
               className="text-blue-600 hover:text-blue-700 transition-colors"
@@ -136,13 +146,33 @@ export default function ProfilePage() {
         <div className="bg-[#1c1c22] rounded-3xl p-6 mb-4">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
-                <span className="text-2xl text-white">{shortUsername}</span>
-              </div>
-              <button className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-background">
+              {/* 🌟 ДИНАМИЧЕСКАЯ АВАТАРКА */}
+              {fullAvatarUrl && !imageError ? (
+                // Если аватарка есть и загружается без ошибок — рендерим её
+                <div className="w-20 h-20 rounded-full overflow-hidden border border-border bg-[#2c2c35]">
+                  <img
+                    src={fullAvatarUrl}
+                    alt={username}
+                    className="w-full h-full object-cover"
+                    onError={() => setImageError(true)} // Если ссылка битая, упадем в фолбек с буквой
+                  />
+                </div>
+              ) : (
+                // Фолбек: если аватарки нет, показываем красивую заглушку с первой буквой
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
+                  <span className="text-2xl text-white">{shortUsername}</span>
+                </div>
+              )}
+
+              {/* Кнопка камеры */}
+              <Link
+                href="/dashboard/settingsProfile"
+                className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-background hover:bg-blue-700 transition-colors"
+              >
                 <Camera size={14} className="text-white" />
-              </button>
+              </Link>
             </div>
+
             <div className="flex-1">
               <h2 className="text-xl mb-1">
                 {!isAuthenticated ? (
