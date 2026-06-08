@@ -17,7 +17,7 @@ export default function BalancePage() {
   const shortUsername = username ? username[0].toUpperCase() : "?";
 
   return (
-    <div className="space-y-4 max-w-2xl mx-auto">
+    <div className="space-y-4 max-w-2xl mx-auto ">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-[#130e40] flex items-center justify-center text-white font-bold text-sm">

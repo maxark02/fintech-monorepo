@@ -74,9 +74,9 @@ export default function ProfilePage() {
   const email = user?.email ?? "user@example.com";
 
   return (
-    <div className="dark text-foreground h-screen">
+    <div className="dark text-foreground h-screen ">
       {/* Header */}
-      <header className="sticky">
+      <header className="sticky ">
         <div className="max-w-3xl mx-auto px-4 md:px-6 ">
           <div className="flex items-center justify-between">
             <Link
@@ -87,7 +87,7 @@ export default function ProfilePage() {
             </Link>
             <h1>Profile</h1>
             <Link
-              href="/settingsProfile"
+              href="/dashboard/settingsProfile"
               className="text-blue-600 hover:text-blue-700 transition-colors"
             >
               Edit

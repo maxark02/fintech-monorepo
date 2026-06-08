@@ -2,7 +2,7 @@ import { Card } from "@fin/api-client";
 
 export const MOCK_CARDS: Card[] = [
   {
-    id: "credit",
+    id: "Credit",
     cardNumber: "3456 1234 8532 9903",
     type: "credit",
     network: "Mastercard",
@@ -10,7 +10,7 @@ export const MOCK_CARDS: Card[] = [
     balance: 1245500,
   },
   {
-    id: "debit",
+    id: "Debit",
     cardNumber: "1234 5678 9012 3456",
     type: "credit",
     network: "Visa",

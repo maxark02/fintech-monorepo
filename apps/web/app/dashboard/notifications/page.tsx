@@ -9,14 +9,11 @@ export default function NotificationsPage() {
   return (
     <div className="space-y-4">
       <PageHeader title="Notifications" />
-      <h3 className="flex items-center justify-center">Notifications</h3>
 
       {isLoading ? (
         <p className="text-white/50 text-sm text-center">Loading...</p>
       ) : notifications.length === 0 ? (
-        <p className="text-white/50 text-sm text-center">
-          No notifications yet
-        </p>
+        <p className="text-white/50 text-sm text-center">No notifications</p>
       ) : (
         <div className="flex flex-col gap-3">
           {notifications.map((notification) => (

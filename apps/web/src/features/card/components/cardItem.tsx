@@ -25,9 +25,11 @@ export function CardItem({
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-white/70 text-sm font-mono tracking-widest">
-          {showNumber ? card.cardNumber : `•••• •••• •••• ${card.lastFour}`}
-          <p>{showNumber ? card?.balance : "Hided"}</p>
+        <span className="text-white/70  font-mono tracking-widest">
+          {showNumber ? card.cardNumber : `**** **** **** ${card.lastFour}`}
+          <p className="font-bold text-xl text-white">
+            {showNumber ? card?.balance : "Hided"}
+          </p>
         </span>
         <button
           onClick={() => setShowNumber(!showNumber)}
@@ -42,7 +44,7 @@ export function CardItem({
       <div className="flex items-center justify-between"></div>
 
       <div className="flex items-center justify-between mt-3">
-        <span className="text-white font-bold text-base">{card.network}</span>
+        <span className="text-xs font-bold ">{card.network}</span>
       </div>
     </div>
   );

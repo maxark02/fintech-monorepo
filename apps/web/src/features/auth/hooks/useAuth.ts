@@ -1,16 +1,17 @@
 "use client";
 
-import { useAuthStore } from "../store/authStore";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-// Импортируем ваш настроенный клиент Supabase (проверьте этот путь на всякий случай)
-import { supabase } from "../../../lib/supabase";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+import { useAuthStore } from "../store/authStore";
 
 export const useAuth = () => {
   const setUser = useAuthStore((s) => s.setUser);
-  const logoutStore = useAuthStore((s) => s.logout);
+  const updateUserStore = useAuthStore((s) => s.updateUser);
   const storeIsAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const storeUser = useAuthStore((s) => s.user);
+
+  const logoutFromStore = useAuthStore((s) => s.logout);
 
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
@@ -19,20 +20,19 @@ export const useAuth = () => {
     setIsHydrated(true);
   }, []);
 
-  // 1. Логин напрямую через Supabase
   const handleLogin = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
       if (error) throw error;
-
       if (data?.user) {
-        // Формируем объект юзера для вашего Zustand стора
         setUser({
-          username: data.user.email?.split("@")[0] || "User",
+          username:
+            data.user.user_metadata.username ||
+            data.user.email?.split("@")[0] ||
+            "User",
           email: data.user.email || email,
         });
         router.push("/dashboard/balance");
@@ -42,11 +42,8 @@ export const useAuth = () => {
     }
   };
 
-  // 2. Регистрация напрямую через Supabase
   const handleRegister = async (username: string, email: string) => {
     try {
-      // Примечание: для полноценной регистрации в Supabase на продакшене нужен еще password,
-      // но если у вас сейчас это заглушка, оставляем логику сохранения профиля
       setUser({ username, email });
       router.push("/dashboard/balance");
     } catch (error) {
@@ -55,15 +52,50 @@ export const useAuth = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    logoutStore();
-    router.push("/login");
+    await supabase.auth.signOut(); // Выходим из Supabase
+    logoutFromStore(); // Чистим Zustand стор (теперь без ошибок!)
+    router.push("/login"); // Перенаправляем на логин
   };
 
+  // 1. Метод обязательно должен быть объявлен внутри хука:
+  const handleUpdateProfile = async (updates: {
+    username?: string;
+    password?: string;
+    avatarUrl?: string;
+  }) => {
+    try {
+      const supabaseAttributes: any = {};
+      if (updates.password) supabaseAttributes.password = updates.password;
+      if (updates.username || updates.avatarUrl) {
+        supabaseAttributes.data = {};
+        if (updates.username)
+          supabaseAttributes.data.username = updates.username;
+        if (updates.avatarUrl)
+          supabaseAttributes.data.avatar_url = updates.avatarUrl;
+      }
+
+      const { data, error } =
+        await supabase.auth.updateUser(supabaseAttributes);
+      if (error) throw error;
+
+      if (data?.user) {
+        updateUserStore({
+          username: data.user.user_metadata.username || updates.username,
+        });
+      }
+      return { success: true };
+    } catch (error) {
+      console.error("Update profile failed:", error);
+      return { success: false, error };
+    }
+  };
+
+  // 2. ВАЖНО: Метод ДОЛЖЕН БЫТЬ внутри этого return объекта, иначе TS его не увидит!
   return {
     login: handleLogin,
     register: handleRegister,
     logout: handleLogout,
+    updateProfile: handleUpdateProfile, // 🌟 Убедитесь, что эта строка на месте
     isAuthenticated: isHydrated ? storeIsAuthenticated : false,
     user: isHydrated ? storeUser : null,
   };
