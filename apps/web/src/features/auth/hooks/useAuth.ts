@@ -34,6 +34,8 @@ export const useAuth = () => {
             data.user.email?.split("@")[0] ||
             "User",
           email: data.user.email || email,
+          // Сохраняем аватарку при логине, если она есть
+          avatarUrl: data.user.user_metadata.avatar_url || "",
         });
         router.push("/dashboard/balance");
       }
@@ -44,7 +46,7 @@ export const useAuth = () => {
 
   const handleRegister = async (username: string, email: string) => {
     try {
-      setUser({ username, email });
+      setUser({ username, email, avatarUrl: "" });
       router.push("/dashboard/balance");
     } catch (error) {
       console.error("Registration failed:", error);
@@ -52,51 +54,71 @@ export const useAuth = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut(); // Выходим из Supabase
-    logoutFromStore(); // Чистим Zustand стор (теперь без ошибок!)
-    router.push("/login"); // Перенаправляем на логин
+    await supabase.auth.signOut();
+    logoutFromStore();
+    router.push("/login");
   };
 
-  // 1. Метод обязательно должен быть объявлен внутри хука:
+  // ОБНОВЛЕННЫЙ МЕТОД:
   const handleUpdateProfile = async (updates: {
     username?: string;
     password?: string;
     avatarUrl?: string;
   }) => {
     try {
+      // 🌟 ШАГ 1: Принудительно "прогреваем" сессию.
+      // getSession() заглянет в хранилище и установит токены в заголовки клиента.
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError || !sessionData.session) {
+        console.warn("Session missing in getSession, trying to refresh...");
+        // Пробуем жестко восстановить сессию пользователя
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) {
+          throw new Error("Auth session missing! Please re-login.");
+        }
+      }
+
       const supabaseAttributes: any = {};
       if (updates.password) supabaseAttributes.password = updates.password;
+
       if (updates.username || updates.avatarUrl) {
         supabaseAttributes.data = {};
         if (updates.username)
           supabaseAttributes.data.username = updates.username;
         if (updates.avatarUrl)
-          supabaseAttributes.data.avatar_url = updates.avatarUrl;
+          supabaseAttributes.data.avatar_url = updates.avatarUrl; // Supabase любит snake_case
       }
 
+      // 🌟 ШАГ 2: Теперь вызываем обновление, когда клиент точно знает токен
       const { data, error } =
         await supabase.auth.updateUser(supabaseAttributes);
       if (error) throw error;
 
+      // 🌟 ШАГ 3: Обновляем Zustand стор актуальными данными
       if (data?.user) {
         updateUserStore({
           username: data.user.user_metadata.username || updates.username,
+          // Добавляем сохранение аватарки в Zustand, чтобы профиль обновлялся визуально
+          avatarUrl: data.user.user_metadata.avatar_url || updates.avatarUrl,
         });
       }
       return { success: true };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Update profile failed:", error);
-      return { success: false, error };
+      return { success: false, error: error.message || error };
     }
   };
 
-  // 2. ВАЖНО: Метод ДОЛЖЕН БЫТЬ внутри этого return объекта, иначе TS его не увидит!
   return {
     login: handleLogin,
     register: handleRegister,
     logout: handleLogout,
-    updateProfile: handleUpdateProfile, // 🌟 Убедитесь, что эта строка на месте
+    updateProfile: handleUpdateProfile,
     isAuthenticated: isHydrated ? storeIsAuthenticated : false,
     user: isHydrated ? storeUser : null,
+    // На всякий случай прокидываем сам инстанс supabase для страницы настроек
+    supabase,
   };
 };
