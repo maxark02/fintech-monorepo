@@ -29,14 +29,13 @@ export const useAuth = () => {
       if (error) throw error;
       if (data?.user) {
         setUser({
-          id: data.id,
+          id: data.user.id, // Передаем ID
           username:
             data.user.user_metadata.username ||
             data.user.email?.split("@")[0] ||
             "User",
           email: data.user.email || email,
-          // Сохраняем аватарку при логине, если она есть
-          avatarUrl: data.user.user_metadata.avatar_url || "",
+          avatarUrl: data.user.user_metadata.avatar_url || "", // Достаем аватарку
         });
         router.push("/dashboard/balance");
       }
@@ -45,13 +44,17 @@ export const useAuth = () => {
     }
   };
 
-  const handleRegister = async (username: string, email: string) => {
+  const handleRegister = async (
+    username: string,
+    email: string,
+    password: string,
+  ) => {
     try {
       // 1. Регистрируем пользователя в Supabase Auth.
       // Передаем username в user_metadata, чтобы Supabase его запомнил
       const { data, error } = await supabase.auth.signUp({
         email,
-        password: "временный_пароль_или_из_формы", // Сюда нужно передавать пароль из вашей формы регистрации
+        password: password,
         options: {
           data: {
             username: username,
