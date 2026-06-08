@@ -121,7 +121,7 @@ export default function ProfilePage() {
     <div className="dark text-foreground h-screen ">
       {/* Header */}
       <header className="sticky ">
-        <div className="max-w-3xl mx-auto px-4 md:px-6 ">
+        <div className="max-w-3xl mx-auto px-4 md:px-6 bg-bg-card ">
           <div className="flex items-center justify-between">
             <Link
               href="/dashboard/balance"
