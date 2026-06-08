@@ -149,7 +149,7 @@ export default function ProfilePage() {
               {/* 🌟 ДИНАМИЧЕСКАЯ АВАТАРКА */}
               {fullAvatarUrl && !imageError ? (
                 // Если аватарка есть и загружается без ошибок — рендерим её
-                <div className="w-20 h-20 rounded-full overflow-hidden border border-border bg-[#2c2c35]">
+                <div className="w-20 h-20 rounded-full overflow-hidden ">
                   <img
                     src={fullAvatarUrl}
                     alt={username}
@@ -167,7 +167,7 @@ export default function ProfilePage() {
               {/* Кнопка камеры */}
               <Link
                 href="/dashboard/settingsProfile"
-                className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center border-2 border-background hover:bg-blue-700 transition-colors"
+                className="absolute bottom-0 right-0 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center   hover:bg-blue-700 transition-colors"
               >
                 <Camera size={14} className="text-white" />
               </Link>
