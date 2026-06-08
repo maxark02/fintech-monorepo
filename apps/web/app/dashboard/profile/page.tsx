@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react"; // 🌟 Добавили
+import { createBrowserClient } from "@supabase/ssr"; // 🌟 Добавили
 import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +24,39 @@ import { Skeleton } from "@fin/ui";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export default function ProfilePage() {
+  // 🌟 НАШ ТЕСТ СУПАБЕЙЗА НА СТРАНИЦЕ ПРОФИЛЯ
+  useEffect(() => {
+    const testSupabase = async () => {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+      // Защита для сборки (CI/CD)
+      if (!url || !key) {
+        console.warn("Тест пропущен: нет ENV переменных на сервере.");
+        return;
+      }
+
+      const supabase = createBrowserClient(url, key, {
+        auth: {
+          persistSession: true,
+          storage:
+            typeof window !== "undefined" ? window.localStorage : undefined,
+        },
+      });
+
+      console.log("=== ТЕСТ СУПАБЕЙЗА НА СТРАНИЦЕ ПРОФИЛЯ ===");
+      console.log("1. URL проекта:", url);
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      console.log("2. Сессия в браузере:", sessionData.session);
+
+      const { data: userData } = await supabase.auth.getUser();
+      console.log("3. Пользователь в Supabase:", userData.user);
+    };
+
+    testSupabase();
+  }, []);
+
   const menuItems = [
     {
       icon: CreditCard,
@@ -61,14 +96,12 @@ export default function ProfilePage() {
     },
   ];
 
-  // Достаем данные и метод логаута из нашего Zustand-хука
   const { user, isAuthenticated, logout } = useAuth();
   const { balance, isLoading } = useBalance();
 
   const transactionCount = balance?.transactions?.length ?? 0;
   const cardCount = balance?.cards?.length ?? 0;
 
-  // Безопасно вытаскиваем username из Zustand
   const username = user?.username ?? "User";
   const shortUsername = username ? username[0].toUpperCase() : "U";
   const email = user?.email ?? "user@example.com";
@@ -86,6 +119,7 @@ export default function ProfilePage() {
               <ArrowLeft size={20} />
             </Link>
             <h1>Profile</h1>
+            {/* 🌟 Ссылка Edit ведет на страницу настроек вашего Toss-клона */}
             <Link
               href="/dashboard/settingsProfile"
               className="text-blue-600 hover:text-blue-700 transition-colors"
@@ -111,7 +145,6 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <h2 className="text-xl mb-1">
-                {/* Заменили рушащий сборку session на проверку авторизации */}
                 {!isAuthenticated ? (
                   <Skeleton className="w-24 h-5" />
                 ) : (
@@ -133,7 +166,6 @@ export default function ProfilePage() {
                 ) : (
                   <>
                     <span>₩</span>
-                    {/* Передаем только число, либо уже отформатированное число без знака */}
                     <NumberPopIn
                       value={balance?.total.toLocaleString("ko-KR") ?? "0"}
                     />

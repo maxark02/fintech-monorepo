@@ -28,12 +28,15 @@ export const useAuth = () => {
       ) as any;
     }
 
-    // 🌟 Настраиваем createBrowserClient на работу со стандартными куками
+    // 🌟 ЖЕСТКАЯ НАСТРОЙКА НА LOCALSTORAGE ДЛЯ ДЕПЛОЯ
     return createBrowserClient(url, key, {
       auth: {
-        flowType: "pkce",
-        persistSession: true,
+        persistSession: true, // Включаем сохранение сессии
+        autoRefreshToken: true, // Автоматически обновляем токен
         detectSessionInUrl: true,
+        // Жестко привязываем к localStorage браузера в обход кук Next.js
+        storage:
+          typeof window !== "undefined" ? window.localStorage : undefined,
       },
     });
   });
