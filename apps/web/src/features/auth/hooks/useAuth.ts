@@ -10,16 +10,19 @@ export const useAuth = () => {
   const updateUserStore = useAuthStore((s) => s.updateUser);
   const storeIsAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const storeUser = useAuthStore((s) => s.user);
-
   const logoutFromStore = useAuthStore((s) => s.logout);
 
   const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // Ждем гидратации Zustand стора, чтобы не было конфликтов SSR
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
+  /**
+   * ВХОД В АККАУНТ
+   */
   const handleLogin = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -27,16 +30,21 @@ export const useAuth = () => {
         password,
       });
       if (error) throw error;
+
       if (data?.user) {
         setUser({
-          id: data.user.id, // Передаем ID
+          id: data.user.id,
           username:
             data.user.user_metadata.username ||
             data.user.email?.split("@")[0] ||
             "User",
           email: data.user.email || email,
-          avatarUrl: data.user.user_metadata.avatar_url || "", // Достаем аватарку
-        });
+          avatarUrl:
+            data.user.user_metadata.avatar_url ||
+            data.user.user_metadata.avatarUrl ||
+            "",
+        } as any);
+
         router.push("/dashboard/balance");
       }
     } catch (error) {
@@ -44,17 +52,18 @@ export const useAuth = () => {
     }
   };
 
+  /**
+   * РЕГИСТРАЦИЯ
+   */
   const handleRegister = async (
     username: string,
     email: string,
     password: string,
   ) => {
     try {
-      // 1. Регистрируем пользователя в Supabase Auth.
-      // Передаем username в user_metadata, чтобы Supabase его запомнил
       const { data, error } = await supabase.auth.signUp({
         email,
-        password: password,
+        password,
         options: {
           data: {
             username: username,
@@ -66,48 +75,52 @@ export const useAuth = () => {
       if (error) throw error;
 
       if (data?.user) {
-        // 2. Теперь у нас есть НАСТОЯЩИЙ data.user.id от Supabase!
+        // Записываем данные в Zustand
         setUser({
-          id: data.user.id, // 🌟 Передаем реальный id, TypeScript доволен
+          id: data.user.id,
           username: data.user.user_metadata.username || username,
           email: data.user.email || email,
           avatarUrl: "",
-        });
+        } as any);
 
-        router.push("/dashboard/balance");
+        // Если Supabase сразу выдал сессию (Email confirmation выключен) — пускаем в систему
+        const { data: sessionCheck } = await supabase.auth.getSession();
+        if (sessionCheck?.session) {
+          router.push("/dashboard/balance");
+        } else {
+          alert(
+            "Регистрация успешна! Пожалуйста, проверьте почту для подтверждения аккаунта.",
+          );
+          router.push("/login");
+        }
       }
     } catch (error) {
       console.error("Registration failed:", error);
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    logoutFromStore();
-    router.push("/login");
-  };
-
-  // ОБНОВЛЕННЫЙ МЕТОД:
+  /**
+   * ОБНОВЛЕНИЕ ПРОФИЛЯ (Без дубликатов и с правильным маппингом)
+   */
   const handleUpdateProfile = async (updates: {
     username?: string;
     password?: string;
     avatarUrl?: string;
   }) => {
     try {
-      // 🌟 ШАГ 1: Принудительно "прогреваем" сессию.
-      // getSession() заглянет в хранилище и установит токены в заголовки клиента.
+      // Шаг 1: Принудительно проверяем и обновляем сессию клиента перед запросом
       const { data: sessionData, error: sessionError } =
         await supabase.auth.getSession();
 
       if (sessionError || !sessionData.session) {
-        console.warn("Session missing in getSession, trying to refresh...");
-        // Пробуем жестко восстановить сессию пользователя
+        console.warn("Session missing in getSession, trying getUser...");
         const { data: userData } = await supabase.auth.getUser();
         if (!userData.user) {
           throw new Error("Auth session missing! Please re-login.");
         }
       }
 
+      // Шаг 2: Формируем тело запроса для Supabase
       const supabaseAttributes: any = {};
       if (updates.password) supabaseAttributes.password = updates.password;
 
@@ -116,20 +129,22 @@ export const useAuth = () => {
         if (updates.username)
           supabaseAttributes.data.username = updates.username;
         if (updates.avatarUrl)
-          supabaseAttributes.data.avatar_url = updates.avatarUrl; // Supabase любит snake_case
+          supabaseAttributes.data.avatar_url = updates.avatarUrl; // Строго snake_case для базы
       }
 
-      // 🌟 ШАГ 2: Теперь вызываем обновление, когда клиент точно знает токен
+      // Шаг 3: Отправляем апдейт в Supabase
       const { data, error } =
         await supabase.auth.updateUser(supabaseAttributes);
       if (error) throw error;
 
-      // 🌟 ШАГ 3: Обновляем Zustand стор актуальными данными
+      // Шаг 4: Если всё ок, синхронизируем данные с локальным Zustand стором
       if (data?.user) {
         updateUserStore({
           username: data.user.user_metadata.username || updates.username,
-          // Добавляем сохранение аватарки в Zustand, чтобы профиль обновлялся визуально
-          avatarUrl: data.user.user_metadata.avatar_url || updates.avatarUrl,
+          avatarUrl:
+            data.user.user_metadata.avatar_url ||
+            data.user.user_metadata.avatarUrl ||
+            updates.avatarUrl,
         });
       }
       return { success: true };
@@ -139,6 +154,15 @@ export const useAuth = () => {
     }
   };
 
+  /**
+   * ВЫХОД ИЗ СИСТЕМЫ
+   */
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    logoutFromStore();
+    router.push("/login");
+  };
+
   return {
     login: handleLogin,
     register: handleRegister,
@@ -146,7 +170,6 @@ export const useAuth = () => {
     updateProfile: handleUpdateProfile,
     isAuthenticated: isHydrated ? storeIsAuthenticated : false,
     user: isHydrated ? storeUser : null,
-    // На всякий случай прокидываем сам инстанс supabase для страницы настроек
     supabase,
   };
 };
