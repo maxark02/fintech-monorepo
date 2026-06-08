@@ -18,4 +18,13 @@ export const supabase = isMissingEnv
         },
       },
     ) as any)
-  : createClient(supabaseUrl as string, supabaseAnonKey as string);
+  : createClient(supabaseUrl as string, supabaseAnonKey as string, {
+      // 🌟 Добавляем явные настройки для удержания сессии на клиенте
+      auth: {
+        persistSession: true, // Говорим Supabase сохранять сессию в браузере
+        autoRefreshToken: true, // Автоматически обновлять истекающие токены
+        detectSessionInUrl: true, // Нужно для авторизации через соцсети/ссылки
+        storage:
+          typeof window !== "undefined" ? window.localStorage : undefined, // Явно указываем localStorage для браузера
+      },
+    });
