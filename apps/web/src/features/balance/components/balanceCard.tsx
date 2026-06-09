@@ -19,15 +19,19 @@ export function BalanceCard() {
       .reduce((s, t) => s + t.amount, 0) ?? 0;
 
   return (
-    <div className="rounded-2xl p-6 bg-[#1c1c22]">
+    // 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card. Теперь фон карточки адаптивный.
+    <div className="rounded-2xl p-6 bg-bg-card transition-colors">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-white/60 text-sm">Total Balance</span>
-        <button className="text-white/60">
+        {/* 🌟 ИЗМЕНЕНО: Заменили text-white/60 на text-text-muted для второстепенного текста */}
+        <span className="text-text-muted text-sm">Total Balance</span>
+        {/* 🌟 ИЗМЕНЕНО: Заменили цвет кнопки на text-text-muted */}
+        <button className="text-text-muted hover:opacity-80 transition-opacity">
           <NavIcon name="eye" className="w-5 h-5" />
         </button>
       </div>
 
-      <p className="text-white text-4xl font-bold mb-4">
+      {/* 🌟 ИЗМЕНЕНО: Заменили text-white на text-text-main для основного жирного баланса */}
+      <p className="text-text-main text-4xl font-bold mb-4">
         {!balance ? (
           <Skeleton className="w-32 h-10" />
         ) : (
@@ -35,10 +39,13 @@ export function BalanceCard() {
         )}
       </p>
 
-      <div className="flex items-center border-t border-white/20 pt-4">
+      {/* 🌟 ИЗМЕНЕНО: Заменили border-white/20 на адаптивную границу border-slate-300 dark:border-white/10 */}
+      <div className="flex items-center border-t border-slate-300 dark:border-white/10 pt-4">
         <div className="flex-1">
-          <p className="text-white/60 text-xs mb-1">Income</p>
-          <p className="text-white font-semibold text-sm">
+          {/* 🌟 ИЗМЕНЕНО: Заменили text-white/60 на text-text-muted */}
+          <p className="text-text-muted text-xs mb-1">Income</p>
+          {/* 🌟 ИЗМЕНЕНО: Заменили text-white на text-text-main */}
+          <p className="text-text-main font-semibold text-sm">
             {!balance ? (
               <Skeleton className="w-15 h-5" />
             ) : (
@@ -46,10 +53,15 @@ export function BalanceCard() {
             )}
           </p>
         </div>
-        <div className="w-px h-8 bg-white/20 mx-4"></div>
+
+        {/* 🌟 ИЗМЕНЕНО: Разделительная линия теперь тоже адаптивная (bg-slate-300 в светлой, белый с прозрачностью в темной) */}
+        <div className="w-px h-8 bg-slate-300 dark:bg-white/10 mx-4"></div>
+
         <div className="flex-1">
-          <p className="text-white/60 text-xs mb-1">Expenses</p>
-          <p className="text-white font-semibold text-sm">
+          {/* 🌟 ИЗМЕНЕНО: Заменили text-white/60 на text-text-muted */}
+          <p className="text-text-muted text-xs mb-1">Expenses</p>
+          {/* 🌟 ИЗМЕНЕНО: Заменили text-white на text-text-main */}
+          <p className="text-text-main font-semibold text-sm">
             {!balance ? (
               <Skeleton className="w-15 h-5" />
             ) : (

@@ -1,38 +1,15 @@
-import type { Metadata } from "next";
+// app/layout.tsx
+import { Providers } from "./providers"; // или ваш путь к провайдеру
 import "./globals.css";
-import { Providers } from "./providers";
-
-// Next.js сам вставит title и description в <head> на основе этого объекта
-export const metadata: Metadata = {
-  title: "Fintech App",
-  description: "Fintech monorepo app",
-};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('theme') || 'dark';
-                  if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (e) {}
-              })()
-            `,
-          }}
-        />
-      </head>
+    <html lang="en" suppressHydrationWarning>
+      {/* 🌟 suppressHydrationWarning обязателен при работе с темами! */}
       <body>
         <Providers>{children}</Providers>
       </body>

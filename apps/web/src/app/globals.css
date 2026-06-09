@@ -1,6 +1,9 @@
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
 
+/* Указываем Tailwind v4, что темная тема управляется классом .dark на корневом элементе */
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
     /* Цвета: светлая тема (по умолчанию) */
     --color-bg-app: #f8fafc;        /* Фон всего приложения */
@@ -9,6 +12,9 @@
     --color-text-muted: #64748b;    /* Второстепенный текст */
     --color-icon-bg: #cbd5e1;       /* Фон иконок */
     --color-accent: #2563eb;        /* Синий цвет (акцент) */
+
+
+
 
     /* Анимации */
     --animate-customPulse: customPulse 1.5s ease-in-out infinite;
@@ -19,7 +25,7 @@
     }
 }
 
-/* Переопределение для темной темы */
+/* Переопределение переменных для темной темы */
 .dark {
     --color-bg-app: #0f0f13;
     --color-bg-card: #1c1c22;
@@ -32,6 +38,6 @@
     body {
         background-color: var(--color-bg-app);
         color: var(--color-text-main);
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s, color 0.3s ease;
     }
 }

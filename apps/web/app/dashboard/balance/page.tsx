@@ -8,21 +8,17 @@ import { BalanceCard } from "@/features/balance";
 import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
 import { NavIcon } from "../_components/nav-icon";
 
-// 🌟 ИСПРАВЛЕННЫЕ ПУТИ СУДЯ ПО ДЕРЕВУ ПРОЕКТА:
-// Все файлы акций у тебя лежат в фиче sales, а не stocks!
 import SalesItem from "@/features/sales/components/SalesItem";
 import { useSales } from "@/features/sales/hooks/useSales";
 
 export const dynamic = "force-dynamic";
 
-// Список тикеров для отслеживания на главном экране
 const DEFAULT_WATCHLIST = ["AAPL", "TSLA", "NVDA", "BTC"];
 
 export default function BalancePage() {
   const { user, isAuthenticated } = useAuth();
   const [imageError, setImageError] = useState(false);
 
-  // Подключаем хук из фичи sales (обновление каждые 15 секунд)
   const { salesData, isLoading, error } = useSales(DEFAULT_WATCHLIST, 15000);
 
   const username = user?.username ?? "";
@@ -37,7 +33,8 @@ export default function BalancePage() {
       : null;
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-24 px-4 md:px-0">
+    // 🌟 ИЗМЕНЕНО: Добавили text-text-main, чтобы дефолтный цвет текста на странице наследовался из темы
+    <div className="space-y-6 max-w-2xl mx-auto pb-24 px-4 md:px-0 text-text-main">
       {/* Шапка: Аватарка и приветствие */}
       <div className="flex items-center justify-between mb-2">
         <div className="relative flex items-center gap-3">
@@ -66,7 +63,8 @@ export default function BalancePage() {
 
         <div className="flex items-center gap-2">
           <Link href="/dashboard/settings">
-            <button className="w-9 h-9 rounded-full bg-[#1c1c22] flex items-center justify-center text-white">
+            {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card. Текст теперь управляется темой. Добавлен hover-эффект через прозрачность */}
+            <button className="w-9 h-9 rounded-full bg-bg-card flex items-center justify-center text-current hover:opacity-80 transition-opacity">
               <NavIcon name="settings" className="w-5 h-5" />
             </button>
           </Link>
@@ -79,23 +77,26 @@ export default function BalancePage() {
       {/* Кнопки действий (Перевод / Карты) */}
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col items-center">
-          <button className="w-full h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center hover:bg-[#2c2c35] transition-colors">
+          {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card, а hover:bg-[#2c2c35] на hover:opacity-90 */}
+          <button className="w-full h-14 rounded-2xl bg-bg-card flex items-center justify-center hover:opacity-90 transition-opacity">
             <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
           </button>
         </div>
         <Link href="/dashboard/cards" className="w-full">
           <div className="flex flex-col items-center">
-            <button className="w-full h-14 rounded-2xl bg-[#1c1c22] flex items-center justify-center hover:bg-[#2c2c35] transition-colors">
+            {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card, убрали хардкод ховера */}
+            <button className="w-full h-14 rounded-2xl bg-bg-card flex items-center justify-center hover:opacity-90 transition-opacity">
               <NavIcon name="card" className="w-6 h-6 text-blue-400" />
             </button>
           </div>
         </Link>
       </div>
 
-      {/* 🌟 БЛОК АКЦИЙ (MARKET WATCH) В САМОМ НИЗУ */}
+      {/* БЛОК АКЦИЙ (MARKET WATCH) В САМОМ НИЗУ */}
       <div className="space-y-3 pt-2">
         <div className="flex justify-between items-center px-1">
-          <h3 className="text-base font-bold text-white tracking-tight">
+          {/* 🌟 ИЗМЕНЕНО: Заменили text-white на text-text-main (в светлой теме заголовок будет темным, в темной — белым) */}
+          <h3 className="text-base font-bold text-text-main tracking-tight">
             Market Watch
           </h3>
           <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full font-semibold">
@@ -103,10 +104,12 @@ export default function BalancePage() {
           </span>
         </div>
 
-        <div className="bg-[#1c1c22] rounded-3xl p-5 space-y-1 shadow-lg">
+        {/* 🌟 ИЗМЕНЕНО: Главный контейнер списка акций теперь использует bg-bg-card вместо bg-[#1c1c22] */}
+        <div className="bg-bg-card rounded-3xl p-5 space-y-1 shadow-lg">
           {/* Состояние скелетона при первой загрузке API */}
           {isLoading && (!salesData || salesData.length === 0) && (
-            <div className="text-sm text-muted-foreground py-2 px-1 animate-pulse">
+            // 🌟 ИЗМЕНЕНО: Заменили text-muted-foreground (старый класс Tailwind) на ваш text-text-muted
+            <div className="text-sm text-text-muted py-2 px-1 animate-pulse">
               Loading stock quotes...
             </div>
           )}
