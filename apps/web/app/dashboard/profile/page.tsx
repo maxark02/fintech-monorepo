@@ -7,7 +7,6 @@ import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
 export const dynamic = "force-dynamic";
 
 import {
-  ArrowLeft,
   Camera,
   ChevronRight,
   LogOut,
@@ -19,6 +18,8 @@ import {
   HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { PageHeader } from "../_components/PageHeader";
+import { NavIcon } from "../_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { Skeleton } from "@fin/ui";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -119,29 +120,20 @@ export default function ProfilePage() {
 
   return (
     <div className="text-text-main min-h-screen transition-colors">
-      {/* Header */}
-      <header className="sticky ">
-        <div className="max-w-3xl mx-auto px-4 md:px-6 bg-bg-card ">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/dashboard/balance"
-              className="w-10 h-10 rounded-full bg-accent text-white hover:bg-accent/80 flex items-center justify-center transition-colors"
-            >
-              <ArrowLeft size={20} />
-            </Link>
-            <h1>Profile</h1>
-            <Link
-              href="/dashboard/settingsProfile"
-              className="text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              Edit
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="max-w-3xl mx-auto md:px-6 py-6 pb-24 md:pb-6">
+        {/* Header в стиле страницы карточек */}
+        <PageHeader
+          title="Profile"
+          rightElement={
+            <Link
+              href="/dashboard/settingsProfile"
+              className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main hover:opacity-80 transition-opacity"
+            >
+              <NavIcon name="settings" className="w-5 h-5" />
+            </Link>
+          }
+        />
         {/* Profile Card */}
         <div className="bg-bg-card rounded-3xl p-6 mb-4 transition-colors">
           <div className="flex items-center gap-4 mb-6">

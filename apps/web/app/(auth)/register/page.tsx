@@ -73,7 +73,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 placeholder="Enter your full name"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 required
               />
             </div>
@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 placeholder="Enter your email"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 required
               />
             </div>
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="Create a password"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-12 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 border border-border rounded-2xl pl-12 pr-12 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 required
               />
               <button
