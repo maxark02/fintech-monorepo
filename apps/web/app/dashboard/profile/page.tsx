@@ -7,7 +7,6 @@ import { NumberPopIn } from "#/app/dashboard/_components/NumberPopIn";
 export const dynamic = "force-dynamic";
 
 import {
-  ArrowLeft,
   Camera,
   ChevronRight,
   LogOut,
@@ -19,6 +18,8 @@ import {
   HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { PageHeader } from "../_components/PageHeader";
+import { NavIcon } from "../_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { Skeleton } from "@fin/ui";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -118,32 +119,23 @@ export default function ProfilePage() {
       : null;
 
   return (
-    <div className="dark text-foreground h-screen ">
-      {/* Header */}
-      <header className="sticky ">
-        <div className="max-w-3xl mx-auto px-4 md:px-6 bg-bg-card ">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/dashboard/balance"
-              className="w-10 h-10 rounded-full bg-accent hover:bg-accent/70 flex items-center justify-center transition-colors"
-            >
-              <ArrowLeft size={20} />
-            </Link>
-            <h1>Profile</h1>
-            <Link
-              href="/dashboard/settingsProfile"
-              className="text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              Edit
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <div className="text-text-main min-h-screen transition-colors">
       {/* Main Content */}
       <main className="max-w-3xl mx-auto md:px-6 py-6 pb-24 md:pb-6">
+        {/* Header в стиле страницы карточек */}
+        <PageHeader
+          title="Profile"
+          rightElement={
+            <Link
+              href="/dashboard/settingsProfile"
+              className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main hover:opacity-80 transition-opacity"
+            >
+              <NavIcon name="settings" className="w-5 h-5" />
+            </Link>
+          }
+        />
         {/* Profile Card */}
-        <div className="bg-[#1c1c22] rounded-3xl p-6 mb-4">
+        <div className="bg-bg-card rounded-3xl p-6 mb-4 transition-colors">
           <div className="flex items-center gap-4 mb-6">
             <div className="relative">
               {/* 🌟 ДИНАМИЧЕСКАЯ АВАТАРКА */}
@@ -181,7 +173,7 @@ export default function ProfilePage() {
                   <NumberPopIn value={username} />
                 )}
               </h2>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-text-muted text-sm">
                 <NumberPopIn value={email} />
               </span>
             </div>
@@ -202,19 +194,19 @@ export default function ProfilePage() {
                   </>
                 )}
               </div>
-              <div className="text-sm text-muted-foreground">Total Balance</div>
+              <div className="text-sm text-text-muted">Total Balance</div>
             </div>
             <div className="text-center">
               <div className="text-2xl mb-1">
                 <NumberPopIn value={String(cardCount)} />
               </div>
-              <div className="text-sm text-muted-foreground">Cards</div>
+              <div className="text-sm text-text-muted">Cards</div>
             </div>
             <div className="text-center">
               <div className="text-2xl mb-1">
                 <NumberPopIn value={String(transactionCount)} />
               </div>
-              <div className="text-sm text-muted-foreground">Transactions</div>
+              <div className="text-sm text-text-muted">Transactions</div>
             </div>
           </div>
         </div>
@@ -225,18 +217,18 @@ export default function ProfilePage() {
             <Link
               key={index}
               href={item.link}
-              className="flex items-center gap-4 bg-[#1c1c22] rounded-2xl p-4 hover:bg-accent/70 transition-colors"
+              className="flex items-center gap-4 bg-bg-card rounded-2xl p-4 hover:opacity-80 transition-opacity"
             >
-              <div className="w-10 h-10 bg-background rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-bg-app rounded-xl flex items-center justify-center">
                 <item.icon size={20} className="text-blue-600" />
               </div>
               <div className="flex-1">
                 <div className="mb-1">{item.label}</div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-text-muted">
                   {item.description}
                 </div>
               </div>
-              <ChevronRight size={20} className="text-muted-foreground" />
+              <ChevronRight size={20} className="text-text-muted" />
             </Link>
           ))}
         </div>

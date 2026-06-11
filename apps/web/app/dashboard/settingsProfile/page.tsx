@@ -139,11 +139,11 @@ export default function SettingsProfilePage() {
   };
 
   return (
-    <div className="dark text-foreground min-h-screen bg-background p-4 flex flex-col items-center justify-center ">
-      <div className="w-full max-w-md bg-[#1c1c22] rounded-3xl p-6 relative">
+    <div className="text-text-main min-h-screen bg-bg-app p-4 flex flex-col items-center justify-center transition-colors">
+      <div className="w-full max-w-md bg-bg-card rounded-3xl p-6 relative transition-colors">
         <Link
           href="/dashboard/profile"
-          className="absolute top-6 left-6 w-10 h-10 rounded-full bg-accent hover:bg-accent/70 flex items-center justify-center transition-colors"
+          className="absolute top-6 left-6 w-10 h-10 rounded-full bg-accent text-white hover:bg-accent/80 flex items-center justify-center transition-colors"
         >
           <ArrowLeft size={20} />
         </Link>
@@ -163,7 +163,7 @@ export default function SettingsProfilePage() {
           <div className="flex flex-col items-center space-y-3 mb-4">
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="relative w-24 h-24 rounded-full bg-background border border-border flex items-center justify-center overflow-hidden cursor-pointer group"
+              className="relative w-24 h-24 rounded-full bg-bg-app border border-border flex items-center justify-center overflow-hidden cursor-pointer group"
             >
               {avatarPreview ? (
                 <img
@@ -172,7 +172,7 @@ export default function SettingsProfilePage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User size={40} className="text-muted-foreground" />
+                <User size={40} className="text-text-muted" />
               )}
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <Camera size={24} className="text-white" />
@@ -198,17 +198,17 @@ export default function SettingsProfilePage() {
 
           {/* Инпут Никнейма */}
           <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Username</label>
+            <label className="text-sm text-text-muted">Username</label>
             <div className="relative">
               <User
-                className="absolute left-4 top-3.5 text-muted-foreground"
+                className="absolute left-4 top-3.5 text-text-muted"
                 size={20}
               />
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-background border border-border rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-blue-600 transition-colors"
+                className="w-full bg-bg-app border border-border rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-blue-600 transition-colors"
                 placeholder="Enter new username"
               />
             </div>
@@ -216,19 +216,19 @@ export default function SettingsProfilePage() {
 
           {/* Инпут Нового Пароля */}
           <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">
+            <label className="text-sm text-text-muted">
               New Password
             </label>
             <div className="relative">
               <Lock
-                className="absolute left-4 top-3.5 text-muted-foreground"
+                className="absolute left-4 top-3.5 text-text-muted"
                 size={20}
               />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-background border border-border rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-blue-600 transition-colors"
+                className="w-full bg-bg-app border border-border rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-blue-600 transition-colors"
                 placeholder="Leave blank to keep current"
               />
             </div>

@@ -11,17 +11,20 @@ export default function NotificationsPage() {
       <PageHeader title="Notifications" />
 
       {isLoading ? (
-        <p className="text-white/50 text-sm text-center">Loading...</p>
+        <p className="text-text-muted text-sm text-center">Loading...</p>
       ) : notifications.length === 0 ? (
-        <p className="text-white/50 text-sm text-center">No notifications</p>
+        <p className="text-text-muted text-sm text-center">No notifications</p>
       ) : (
         <div className="flex flex-col gap-3">
           {notifications.map((notification) => (
-            <div key={notification.id} className="bg-[#1c1c22] rounded-2xl p-4">
-              <p className="text-white font-medium text-sm">
+            <div
+              key={notification.id}
+              className="bg-bg-card rounded-2xl p-4 transition-colors"
+            >
+              <p className="text-text-main font-medium text-sm">
                 {notification.title}
               </p>
-              <p className="text-white/50 text-xs mt-1">
+              <p className="text-text-muted text-xs mt-1">
                 {notification.message}
               </p>
             </div>
