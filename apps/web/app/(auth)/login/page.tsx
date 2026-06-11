@@ -151,20 +151,13 @@ export default function LoginPage() {
         </div>
 
         {/* Social Login */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-1 gap-3 mb-6">
           <button
             type="button"
             onClick={handleGoogleSignIn}
             className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
           >
             <span>Google</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleAppleSignIn}
-            className="bg-accent hover:bg-accent/70 border border-border py-3 rounded-xl transition-colors"
-          >
-            <span>Apple</span>
           </button>
         </div>
 
