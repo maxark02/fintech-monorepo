@@ -1,18 +1,55 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0f0f13;
-  --foreground: #ffffff;
+/* Говорим Tailwind v4, что тёмная тема управляется классом .dark на корне */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Цвета: светлая тема (по умолчанию) */
+  --color-bg-app: #f8fafc; /* Фон всего приложения */
+  --color-bg-card: #e2e8f0; /* Фон карточек/блоков */
+  --color-text-main: #0f172a; /* Основной текст */
+  --color-text-muted: #64748b; /* Второстепенный текст */
+  --color-icon-bg: #cbd5e1; /* Фон иконок */
+  --color-accent: #2563eb; /* Синий цвет (акцент) */
+
+  /* Анимации */
+  --animate-customPulse: customPulse 1.5s ease-in-out infinite;
+
+  @keyframes customPulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Переопределение переменных для тёмной темы */
+.dark {
+  --color-bg-app: #0f0f13;
+  --color-bg-card: #1c1c22;
+  --color-text-main: #ffffff;
+  --color-text-muted: #94a3b8;
+  --color-icon-bg: #252530;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  body {
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition:
+      background-color 0.3s,
+      color 0.3s ease;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
 }
