@@ -54,15 +54,18 @@ export function NumberPopIn({ value }: { value: any }) {
       onClick={replay}
       style={{ cursor: "pointer" }}
     >
-      {value.split("").map((ch: string, i: number) => (
-        <span
-          key={i}
-          className="t-digit"
-          data-stagger={i > 0 ? String(Math.min(i, 3)) : undefined}
-        >
-          {ch}
-        </span>
-      ))}
+      {String(value)
+        .split("")
+        .map((ch: string, i: number) => (
+          <span
+            key={i}
+            className="t-digit"
+            data-stagger={i > 0 ? String(Math.min(i, 3)) : undefined}
+          >
+            {/* Пробел оборачиваем в неразрывный, иначе inline-block его схлопывает */}
+            {ch === " " ? " " : ch}
+          </span>
+        ))}
     </span>
   );
 }
