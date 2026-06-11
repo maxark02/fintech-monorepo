@@ -13,13 +13,13 @@ export function TransactionList({ transactions }: TransactionListProps) {
       {transactions.map((transaction) => (
         <div
           key={transaction.id}
-          className="bg-[#1c1c22] rounded-2xl px-4 py-3 flex items-center gap-3"
+          className="bg-bg-card rounded-2xl px-4 py-3 flex items-center gap-3 transition-colors"
         >
           <div className="flex-1 min-w-0">
-            <p className="text-white font-medium text-sm truncate">
+            <p className="text-text-main font-medium text-sm truncate">
               {transaction.title}
             </p>
-            <p className="text-white/50 text-xs">
+            <p className="text-text-muted text-xs">
               {transaction.category} · {transaction.date}
             </p>
           </div>

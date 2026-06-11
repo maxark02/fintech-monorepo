@@ -37,7 +37,7 @@ export default function TransactionsPage() {
       <PageHeader
         title="Transactions"
         rightElement={
-          <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white">
+          <button className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main">
             <NavIcon name="plus" className="w-5 h-5" />
           </button>
         }
@@ -45,13 +45,13 @@ export default function TransactionsPage() {
 
       {/* Search Bar */}
       <div className="relative">
-        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40">
+        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
           <NavIcon name="search" className="w-4.5 h-4.5" />
         </div>
         <input
           type="text"
           placeholder="Search transactions..."
-          className="w-full bg-[#1c1c22] text-white placeholder-white/40 rounded-2xl pl-11 pr-4 py-3 text-sm outline-none border border-transparent focus:border-white/10"
+          className="w-full bg-bg-card text-text-main placeholder-text-muted rounded-2xl pl-11 pr-4 py-3 text-sm outline-none border border-transparent focus:border-border transition-colors"
         />
       </div>
 
@@ -63,8 +63,8 @@ export default function TransactionsPage() {
             onClick={() => setFilter(tab.value)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               filter === tab.value
-                ? "bg-[#3b5bdb] text-white"
-                : "bg-[#1c1c22] text-white/60 hover:text-white"
+                ? "bg-accent text-white"
+                : "bg-bg-card text-text-muted hover:text-text-main"
             }`}
           >
             {tab.label}
@@ -74,7 +74,7 @@ export default function TransactionsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-[#1c1c22] rounded-2xl p-4">
+        <div className="bg-bg-card rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-xl bg-green-500/15 flex items-center justify-center">
               <NavIcon
@@ -82,9 +82,9 @@ export default function TransactionsPage() {
                 className="w-4 h-4 text-green-500"
               />
             </div>
-            <span className="text-white/50 text-xs">Income</span>
+            <span className="text-text-muted text-xs">Income</span>
           </div>
-          <p className="text-white font-bold text-base">
+          <p className="text-text-main font-bold text-base">
             {isLoading ? (
               <Skeleton className="w-20 h-5" />
             ) : (
@@ -92,14 +92,14 @@ export default function TransactionsPage() {
             )}
           </p>
         </div>
-        <div className="bg-[#1c1c22] rounded-2xl p-4">
+        <div className="bg-bg-card rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded-xl bg-red-500/15 flex items-center justify-center">
               <NavIcon name="arrow-up-right" className="w-4 h-4 text-red-500" />
             </div>
-            <span className="text-white/50 text-xs">Expense</span>
+            <span className="text-text-muted text-xs">Expense</span>
           </div>
-          <p className="text-white font-bold text-base">
+          <p className="text-text-main font-bold text-base">
             {isLoading ? (
               <Skeleton className="w-20 h-5" />
             ) : (

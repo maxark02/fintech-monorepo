@@ -9,7 +9,8 @@
   --color-bg-card: #e2e8f0; /* Фон карточек/блоков */
   --color-text-main: #0f172a; /* Основной текст */
   --color-text-muted: #64748b; /* Второстепенный текст */
-  --color-icon-bg: #cbd5e1; /* Фон иконок */
+  --color-icon-bg: #cbd5e1; /* Фон иконок / второстепенных кнопок */
+  --color-border: #cbd5e1; /* Границы и разделители */
   --color-accent: #2563eb; /* Синий цвет (акцент) */
 
   /* Анимации */
@@ -33,6 +34,7 @@
   --color-text-main: #ffffff;
   --color-text-muted: #94a3b8;
   --color-icon-bg: #252530;
+  --color-border: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {

@@ -15,12 +15,12 @@ export function PageHeader({ title, rightElement }: PageHeaderProps) {
     <div className="flex items-center justify-between mb-6">
       <button
         onClick={() => router.back()}
-        className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main hover:opacity-80 transition-opacity"
       >
         <NavIcon name="arrow-left" className="w-5 h-5" />
       </button>
 
-      <h1 className="text-white font-semibold text-lg">{title}</h1>
+      <h1 className="text-text-main font-semibold text-lg">{title}</h1>
 
       <div className="w-9 h-9 flex items-center justify-center">
         {rightElement ?? null}

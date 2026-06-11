@@ -22,15 +22,15 @@ export default function CardsPage() {
       <PageHeader
         title="Cards"
         rightElement={
-          <button className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white">
+          <button className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main">
             <NavIcon name="plus" className="w-5 h-5" />
           </button>
         }
       />
 
-      <div className="bg-[#1c1c22] rounded-2xl p-4">
-        <p className="text-white/50 text-xs mb-1">Total Balance on Cards</p>
-        <span className="text-white text-2xl font-bold mb-4">
+      <div className="bg-bg-card rounded-2xl p-4 transition-colors">
+        <p className="text-text-muted text-xs mb-1">Total Balance on Cards</p>
+        <span className="text-text-main text-2xl font-bold mb-4">
           <NumberPopIn value={totalCardBalance.toLocaleString("ko-KR")} />
         </span>
       </div>
