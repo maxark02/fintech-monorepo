@@ -15,8 +15,8 @@ export default function RegisterPage() {
     password: "",
   });
 
-  // 🌟 Достаем метод register из нашего Supabase-хука
-  const { register } = useAuth();
+  // 🌟 Достаем методы из нашего Supabase-хука
+  const { register, loginWithOAuth } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,14 +33,10 @@ export default function RegisterPage() {
     }
   };
 
-  // 🌟 Социальные сети пока оставляем заглушками (при желании можно будет подключить через Supabase OAuth)
-  const handleGoogleSignIn = () => {
-    console.log("Google Auth через Supabase пока не настроен");
-  };
+  // 🌟 Регистрация/вход через соцсети — Supabase OAuth
+  const handleGoogleSignIn = () => loginWithOAuth("google");
 
-  const handleAppleSignIn = () => {
-    console.log("Apple Auth через Supabase пока не настроен");
-  };
+  const handleAppleSignIn = () => loginWithOAuth("apple");
 
   return (
     <div className="dark min-h-screen bg-background text-foreground flex items-center justify-center p-4">

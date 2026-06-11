@@ -119,6 +119,28 @@ export const useAuth = () => {
   };
 
   /**
+   * ВХОД ЧЕРЕЗ СОЦСЕТИ (Google / Apple) — Supabase OAuth.
+   * Перенаправляет пользователя на провайдера, а тот возвращает его
+   * на /auth/callback, где сессия попадает в localStorage и стор.
+   */
+  const handleOAuthLogin = async (provider: "google" | "apple") => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/auth/callback`
+              : undefined,
+        },
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error(`${provider} sign-in failed:`, error);
+    }
+  };
+
+  /**
    * ОБНОВЛЕНИЕ ПРОФИЛЯ
    */
   const handleUpdateProfile = async (updates: {
@@ -179,6 +201,7 @@ export const useAuth = () => {
   return {
     login: handleLogin,
     register: handleRegister,
+    loginWithOAuth: handleOAuthLogin,
     logout: handleLogout,
     updateProfile: handleUpdateProfile,
     isAuthenticated: isHydrated ? storeIsAuthenticated : false,

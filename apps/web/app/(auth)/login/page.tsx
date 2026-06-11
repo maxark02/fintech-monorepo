@@ -15,8 +15,8 @@ export default function LoginPage() {
     password: "",
   });
 
-  // 🌟 Достаем метод login из нашего Supabase-хука
-  const { login } = useAuth();
+  // 🌟 Достаем методы из нашего Supabase-хука
+  const { login, loginWithOAuth } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,14 +32,10 @@ export default function LoginPage() {
     }
   };
 
-  // 🌟 Социальные сети пока можно оставить пустыми заглушками, либо потом подключить через Supabase OAuth
-  const handleGoogleSignIn = () => {
-    console.log("Google Auth через Supabase пока не настроен");
-  };
+  // 🌟 Вход через соцсети — Supabase OAuth
+  const handleGoogleSignIn = () => loginWithOAuth("google");
 
-  const handleAppleSignIn = () => {
-    console.log("Apple Auth через Supabase пока не настроен");
-  };
+  const handleAppleSignIn = () => loginWithOAuth("apple");
 
   return (
     <div className="dark min-h-screen bg-background text-foreground flex items-center justify-center p-4">
@@ -72,7 +68,7 @@ export default function LoginPage() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 placeholder="Enter your email"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-card border border-border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 required
               />
             </div>
@@ -95,7 +91,7 @@ export default function LoginPage() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="Enter your password"
-                className="w-full bg-accent border border-border rounded-2xl pl-12 pr-12 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
+                className="w-full bg-card border border-border rounded-2xl pl-12 pr-12 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
                 required
               />
               <button
