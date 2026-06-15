@@ -1,8 +1,8 @@
 import { Transaction } from "@fin/api-client";
-import { MOCK_TRANSACTIONS } from "@/mocks/transactions";
+import { generateAccountData } from "@/lib/accountData";
 
-const Transactions = [{ MOCK_TRANSACTIONS }];
-
-export const getTransactions = async (): Promise<Transaction[]> => {
-  return MOCK_TRANSACTIONS;
+export const getTransactions = async (
+  userId?: string | null,
+): Promise<Transaction[]> => {
+  return generateAccountData(userId).transactions;
 };

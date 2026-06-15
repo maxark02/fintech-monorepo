@@ -3,8 +3,10 @@
 import { useEffect } from "react";
 import { getBalance } from "../api/balanceApi";
 import { useBalanceStore } from "../store/balanceStore";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 export const useBalance = () => {
+  const userId = useAuthStore((s) => s.user?.id);
   const balance = useBalanceStore((s) => s.balance);
   const isLoading = useBalanceStore((s) => s.isLoading);
   const error = useBalanceStore((s) => s.error);
@@ -14,7 +16,7 @@ export const useBalance = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getBalance()
+    getBalance(userId)
       .then((data) => {
         setBalance(data);
         setIsLoading(false);
@@ -23,7 +25,7 @@ export const useBalance = () => {
         setError(err.message);
         setIsLoading(false);
       });
-  }, []);
+  }, [userId]);
 
   return { balance, isLoading, error };
 };
