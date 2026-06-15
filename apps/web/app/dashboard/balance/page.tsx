@@ -76,12 +76,14 @@ export default function BalancePage() {
 
       {/* Кнопки действий (Перевод / Карты) */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col items-center">
-          {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card, а hover:bg-[#2c2c35] на hover:opacity-90 */}
-          <button className="w-full h-14 rounded-2xl bg-bg-card flex items-center justify-center hover:opacity-90 transition-opacity">
-            <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
-          </button>
-        </div>
+        <Link href="/dashboard/transfer" className="w-full">
+          <div className="flex flex-col items-center">
+            {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card, а hover:bg-[#2c2c35] на hover:opacity-90 */}
+            <button className="w-full h-14 rounded-2xl bg-bg-card flex items-center justify-center hover:opacity-90 transition-opacity">
+              <NavIcon name="arrow-up-right" className="w-6 h-6 text-red-500" />
+            </button>
+          </div>
+        </Link>
         <Link href="/dashboard/cards" className="w-full">
           <div className="flex flex-col items-center">
             {/* 🌟 ИЗМЕНЕНО: Заменили bg-[#1c1c22] на bg-bg-card, убрали хардкод ховера */}
