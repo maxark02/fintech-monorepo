@@ -21,6 +21,7 @@ import Link from "next/link";
 import { PageHeader } from "../_components/PageHeader";
 import { NavIcon } from "../_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
+import { formatKRW } from "@/lib/format";
 import { Skeleton } from "@fin/ui";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -189,7 +190,7 @@ export default function ProfilePage() {
                   <>
                     <span>₩</span>
                     <NumberPopIn
-                      value={balance?.total.toLocaleString("ko-KR") ?? "0"}
+                      value={balance ? formatKRW(balance.total) : "0"}
                     />
                   </>
                 )}
