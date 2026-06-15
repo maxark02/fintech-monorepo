@@ -39,7 +39,7 @@ export default function TransactionsPage() {
         title="Transactions"
         rightElement={
           <button className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main">
-            <NavIcon name="plus" className="w-5 h-5" />
+            <NavIcon name="calendar" className="w-5 h-5" />
           </button>
         }
       />

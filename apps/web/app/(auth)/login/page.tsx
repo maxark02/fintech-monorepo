@@ -35,8 +35,6 @@ export default function LoginPage() {
   // 🌟 Вход через соцсети — Supabase OAuth
   const handleGoogleSignIn = () => loginWithOAuth("google");
 
-  const handleAppleSignIn = () => loginWithOAuth("apple");
-
   return (
     <div className="dark min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="w-full max-w-md">
