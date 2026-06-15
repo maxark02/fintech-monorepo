@@ -1,5 +1,7 @@
 import { Sidebar } from "./_components/Sidebar";
 import { BottomNav } from "./_components/BottomNav";
+import { NotificationSpawner } from "@/features/notifications/NotificationSpawner";
+import { NotificationToast } from "@/features/notifications/NotificationToast";
 
 export default function DashboardLayout({
   children,
@@ -20,6 +22,10 @@ export default function DashboardLayout({
       </div>
 
       <BottomNav />
+
+      {/* Случайные уведомления + всплывающий тост */}
+      <NotificationSpawner />
+      <NotificationToast />
     </div>
   );
 }

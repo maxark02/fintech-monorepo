@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { NavIcon } from "../../../../app/dashboard/_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { Skeleton } from "@fin/ui";
 import { NumberPopIn } from "../../../../app/dashboard/_components/NumberPopIn";
 import { formatKRW } from "@/lib/format";
 
+const MASK = "•••••••";
+
 export function BalanceCard() {
   const { balance } = useBalance();
+  const [hidden, setHidden] = useState(false);
 
   const totalIncome =
     balance?.transactions
@@ -26,8 +30,12 @@ export function BalanceCard() {
         {/* 🌟 ИЗМЕНЕНО: Заменили text-white/60 на text-text-muted для второстепенного текста */}
         <span className="text-text-muted text-sm">Total Balance</span>
         {/* 🌟 ИЗМЕНЕНО: Заменили цвет кнопки на text-text-muted */}
-        <button className="text-text-muted hover:opacity-80 transition-opacity">
-          <NavIcon name="eye" className="w-5 h-5" />
+        <button
+          onClick={() => setHidden((v) => !v)}
+          aria-label={hidden ? "Show balance" : "Hide balance"}
+          className="text-text-muted hover:opacity-80 transition-opacity"
+        >
+          <NavIcon name={hidden ? "eye-off" : "eye"} className="w-5 h-5" />
         </button>
       </div>
 
@@ -35,6 +43,8 @@ export function BalanceCard() {
       <p className="text-text-main text-4xl font-bold mb-4">
         {!balance ? (
           <Skeleton className="w-32 h-10" />
+        ) : hidden ? (
+          `₩${MASK}`
         ) : (
           <NumberPopIn value={`₩${formatKRW(balance.total)}`} />
         )}
@@ -49,6 +59,8 @@ export function BalanceCard() {
           <p className="text-text-main font-semibold text-sm">
             {!balance ? (
               <Skeleton className="w-15 h-5" />
+            ) : hidden ? (
+              `₩${MASK}`
             ) : (
               <NumberPopIn value={`₩${formatKRW(totalIncome)}`} />
             )}
@@ -65,6 +77,8 @@ export function BalanceCard() {
           <p className="text-text-main font-semibold text-sm">
             {!balance ? (
               <Skeleton className="w-15 h-5" />
+            ) : hidden ? (
+              `₩${MASK}`
             ) : (
               <NumberPopIn value={`₩${formatKRW(totalExpense)}`} />
             )}
