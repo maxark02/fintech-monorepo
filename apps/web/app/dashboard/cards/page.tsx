@@ -5,6 +5,7 @@ import { PageHeader } from "../_components/PageHeader";
 import { NumberPopIn } from "../_components/NumberPopIn";
 import { CardItem } from "@/features/card/components/cardItem"; // ✅ импорт из файла
 import { useBalance } from "@/features/balance/hooks/useBalance";
+import { formatKRW } from "@/lib/format";
 
 const CARD_GRADIENTS: Record<string, string> = {
   credit: "linear-gradient(135deg, #0f1a35 0%, #1c1c22 100%)",
@@ -32,7 +33,7 @@ export default function CardsPage() {
       <div className="bg-bg-card rounded-2xl p-4 transition-colors">
         <p className="text-text-muted text-xs mb-1">Total Balance on Cards</p>
         <span className="text-text-main text-2xl font-bold mb-4">
-          <NumberPopIn value={totalCardBalance.toLocaleString("ko-KR")} />
+          <NumberPopIn value={`₩${formatKRW(totalCardBalance)}`} />
         </span>
       </div>
 

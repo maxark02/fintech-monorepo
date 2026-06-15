@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Card } from "@fin/api-client";
 import { NavIcon } from "../../../../app/dashboard/_components/nav-icon";
+import { formatKRW } from "@/lib/format";
 
 export function CardItem({
   card,
@@ -28,7 +29,7 @@ export function CardItem({
         <span className="text-white/70  font-mono tracking-widest">
           {showNumber ? card.cardNumber : `**** **** **** ${card.lastFour}`}
           <p className="font-bold text-xl text-white">
-            {showNumber ? card?.balance : "Hidden"}
+            {showNumber ? `₩${formatKRW(card.balance)}` : "Hidden"}
           </p>
         </span>
         <button

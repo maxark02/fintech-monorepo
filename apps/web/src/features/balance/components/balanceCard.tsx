@@ -4,6 +4,7 @@ import { NavIcon } from "../../../../app/dashboard/_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { Skeleton } from "@fin/ui";
 import { NumberPopIn } from "../../../../app/dashboard/_components/NumberPopIn";
+import { formatKRW } from "@/lib/format";
 
 export function BalanceCard() {
   const { balance } = useBalance();
@@ -35,7 +36,7 @@ export function BalanceCard() {
         {!balance ? (
           <Skeleton className="w-32 h-10" />
         ) : (
-          <NumberPopIn value={`₩${balance.total.toLocaleString("ko-KR")}`} />
+          <NumberPopIn value={`₩${formatKRW(balance.total)}`} />
         )}
       </p>
 
@@ -49,7 +50,7 @@ export function BalanceCard() {
             {!balance ? (
               <Skeleton className="w-15 h-5" />
             ) : (
-              <NumberPopIn value={`₩${totalIncome.toLocaleString("ko-KR")}`} />
+              <NumberPopIn value={`₩${formatKRW(totalIncome)}`} />
             )}
           </p>
         </div>
@@ -65,7 +66,7 @@ export function BalanceCard() {
             {!balance ? (
               <Skeleton className="w-15 h-5" />
             ) : (
-              <NumberPopIn value={`₩${totalExpense.toLocaleString("ko-KR")}`} />
+              <NumberPopIn value={`₩${formatKRW(totalExpense)}`} />
             )}
           </p>
         </div>

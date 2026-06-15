@@ -1,6 +1,7 @@
 "use client";
 
 import { Transaction } from "@fin/api-client";
+import { formatKRW } from "@/lib/format";
 
 type TransactionListProps = {
   transactions: Transaction[];
@@ -84,9 +85,9 @@ export function TransactionList({ transactions }: TransactionListProps) {
                       : "text-red-400"
                   }`}
                 >
-                  {`${transaction.type === "income" ? "+" : "-"}₩${Math.abs(
+                  {`${transaction.type === "income" ? "+" : "-"}₩${formatKRW(
                     transaction.amount,
-                  ).toLocaleString("ko-KR")}`}
+                  )}`}
                 </p>
               </div>
             ))}

@@ -7,6 +7,7 @@ import { TransactionList } from "@/features/transactions/";
 import { useState } from "react";
 import { Skeleton } from "@fin/ui";
 import { NumberPopIn } from "../_components/NumberPopIn";
+import { formatKRW } from "@/lib/format";
 
 export default function TransactionsPage() {
   const { data, isLoading } = useTransactions();
@@ -88,7 +89,7 @@ export default function TransactionsPage() {
             {isLoading ? (
               <Skeleton className="w-20 h-5" />
             ) : (
-              <NumberPopIn value={totalIncome.toLocaleString("ko-KR")} />
+              <NumberPopIn value={`₩${formatKRW(totalIncome)}`} />
             )}
           </p>
         </div>
@@ -103,7 +104,7 @@ export default function TransactionsPage() {
             {isLoading ? (
               <Skeleton className="w-20 h-5" />
             ) : (
-              <NumberPopIn value={totalExpense.toLocaleString("ko-KR")} />
+              <NumberPopIn value={`₩${formatKRW(totalExpense)}`} />
             )}
           </p>
         </div>
