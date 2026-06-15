@@ -164,9 +164,12 @@ export function generateAccountData(userId?: string | null): AccountData {
   transactions.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 
   // --- Баланс ---
+  // Базовый «капитал» аккаунта берём по нелинейной шкале, чтобы у разных
+  // аккаунтов балансы заметно отличались (от пары сотен тысяч до десятков млн),
+  // а не кучковались в одном диапазоне.
   const net = transactions.reduce((s, t) => s + t.amount, 0);
-  const base = randAmount(rng, 300_000, 5_000_000);
-  const total = Math.max(50_000, base + net);
+  const base = randAmount(rng, 100_000, 40_000_000) * (0.4 + rng() * 1.6);
+  const total = Math.max(50_000, Math.round((base + net) / 100) * 100);
   const changePct = Math.round((rng() * 8 - 3) * 10) / 10; // -3.0% … +5.0%
   const changeAmount = Math.round((total * changePct) / 100 / 100) * 100;
 
