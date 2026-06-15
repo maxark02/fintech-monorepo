@@ -28,7 +28,7 @@ export function CardItem({
         <span className="text-white/70  font-mono tracking-widest">
           {showNumber ? card.cardNumber : `**** **** **** ${card.lastFour}`}
           <p className="font-bold text-xl text-white">
-            {showNumber ? card?.balance : "Hided"}
+            {showNumber ? card?.balance : "Hidden"}
           </p>
         </span>
         <button
