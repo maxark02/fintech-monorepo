@@ -130,7 +130,27 @@ export function generateAccountData(userId?: string | null): AccountData {
   const transactions: Transaction[] = [];
   let txId = 1;
 
-  const addTx = (tpl: Template, daysAgo: number) => {
+  // «Пул активных дней»: их меньше, чем транзакций, поэтому даты группируются —
+  // на одни дни попадает 1 транзакция, на другие 2–3+. Веса со смещением, чтобы
+  // некоторые дни «притягивали» больше транзакций.
+  const dayPool = [
+    ...new Set(
+      Array.from({ length: randInt(rng, 7, 13) }, () => randInt(rng, 0, 70)),
+    ),
+  ];
+  const dayWeights = dayPool.map(() => rng() * rng() + 0.15);
+  const dayWeightSum = dayWeights.reduce((s, w) => s + w, 0);
+  const pickDay = (): number => {
+    let r = rng() * dayWeightSum;
+    for (let i = 0; i < dayPool.length; i++) {
+      r -= dayWeights[i]!;
+      if (r <= 0) return dayPool[i]!;
+    }
+    return dayPool[dayPool.length - 1]!;
+  };
+
+  // daysAgo не задан → берём день из пула (с группировкой)
+  const addTx = (tpl: Template, daysAgo?: number) => {
     const value = randAmount(rng, tpl.min, tpl.max);
     transactions.push({
       id: String(txId++),
@@ -138,7 +158,7 @@ export function generateAccountData(userId?: string | null): AccountData {
       category: tpl.category,
       amount: tpl.type === "expense" ? -value : value,
       currency: "KRW",
-      date: toDateString(daysAgo),
+      date: toDateString(daysAgo ?? pickDay()),
       merchant: tpl.merchant,
       type: tpl.type,
       emoji: tpl.emoji,
@@ -146,19 +166,19 @@ export function generateAccountData(userId?: string | null): AccountData {
     });
   };
 
-  // Зарплата — недавняя
+  // Зарплата — недавняя (фиксированный недавний день)
   addTx(INCOME_TEMPLATES[0]!, randInt(rng, 1, 8));
 
   // Доп. доходы (1–3)
   const extraIncome = randInt(rng, 1, 3);
   for (let i = 0; i < extraIncome; i++) {
-    addTx(pick(rng, INCOME_TEMPLATES.slice(1)), randInt(rng, 0, 60));
+    addTx(pick(rng, INCOME_TEMPLATES.slice(1)));
   }
 
   // Расходы (10–18)
   const expenseCount = randInt(rng, 10, 18);
   for (let i = 0; i < expenseCount; i++) {
-    addTx(pick(rng, EXPENSE_TEMPLATES), randInt(rng, 0, 65));
+    addTx(pick(rng, EXPENSE_TEMPLATES));
   }
 
   // Сортировка по дате (свежие сверху)
