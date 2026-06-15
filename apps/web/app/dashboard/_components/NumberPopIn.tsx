@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const styles = `
 :root {
@@ -40,26 +40,52 @@ if (
   document.head.appendChild(style);
 }
 
+// Длительности из CSS: --digit-dur (500ms) + --digit-stagger * 3 (210ms) + запас
+const ANIMATION_MS = 800;
+
 export function NumberPopIn({ value }: { value: any }) {
+  const str = String(value);
   const [playing, setPlaying] = useState(true);
+
+  // Запускаем анимацию при появлении и при смене значения, затем «схлопываем»
+  // в обычный текст — чтобы число выделялось и копировалось как цельная строка,
+  // а не по символу (каждый символ — отдельный inline-block).
+  useEffect(() => {
+    setPlaying(true);
+    const id = setTimeout(() => setPlaying(false), ANIMATION_MS);
+    return () => clearTimeout(id);
+  }, [str]);
 
   const replay = () => {
     setPlaying(false);
     requestAnimationFrame(() => requestAnimationFrame(() => setPlaying(true)));
   };
 
+  // После анимации — обычный текст (нормальное выделение/копирование)
+  if (!playing) {
+    return (
+      <span onClick={replay} style={{ cursor: "pointer" }}>
+        {str}
+      </span>
+    );
+  }
+
+  // Во время анимации — посимвольный pop-in. aria-label даёт скринридерам
+  // цельную строку, сами символы скрыты от них.
   return (
     <span
-      className={"t-digit-group" + (playing ? " is-animating" : "")}
+      className="t-digit-group is-animating"
       onClick={replay}
       style={{ cursor: "pointer" }}
+      aria-label={str}
     >
-      {String(value)
+      {str
         .split("")
         .map((ch: string, i: number) => (
           <span
             key={i}
             className="t-digit"
+            aria-hidden="true"
             data-stagger={i > 0 ? String(Math.min(i, 3)) : undefined}
           >
             {/* Пробел оборачиваем в неразрывный, иначе inline-block его схлопывает */}
