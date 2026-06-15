@@ -107,9 +107,11 @@ export function generateAccountData(userId?: string | null): AccountData {
   const seed = cyrb53(userId && userId.length > 0 ? userId : "guest");
   const rng = mulberry32(seed);
 
-  // --- Карты (2–3 на аккаунт) ---
-  const cardCount = randInt(rng, 2, 3);
-  const cards: Card[] = Array.from({ length: cardCount }, (_, i) => {
+  // --- Карты: случайное кол-во (1–4) на аккаунт ---
+  // Метаданные карт генерируем сразу, а баланс распределим позже так,
+  // чтобы сумма по картам была равна общему балансу счёта.
+  const cardCount = randInt(rng, 1, 4);
+  const cardMeta = Array.from({ length: cardCount }, (_, i) => {
     const lastFour = String(randInt(rng, 1000, 9999));
     const groups = Array.from({ length: 3 }, () =>
       String(randInt(rng, 1000, 9999)),
@@ -117,13 +119,12 @@ export function generateAccountData(userId?: string | null): AccountData {
     return {
       id: String(i + 1),
       cardNumber: `${groups[0]} ${groups[1]} ${groups[2]} ${lastFour}`,
-      type: rng() > 0.4 ? "credit" : "debit",
+      type: (rng() > 0.4 ? "credit" : "debit") as Card["type"],
       network: pick(rng, NETWORKS),
       lastFour,
-      balance: randAmount(rng, 100_000, 3_500_000),
     };
   });
-  const cardIds = cards.map((c) => c.id);
+  const cardIds = cardMeta.map((c) => c.id);
 
   // --- Транзакции ---
   const transactions: Transaction[] = [];
@@ -172,6 +173,21 @@ export function generateAccountData(userId?: string | null): AccountData {
   const total = Math.max(50_000, Math.round((base + net) / 100) * 100);
   const changePct = Math.round((rng() * 8 - 3) * 10) / 10; // -3.0% … +5.0%
   const changeAmount = Math.round((total * changePct) / 100 / 100) * 100;
+
+  // --- Распределяем total между картами (сумма карт === total) ---
+  const weights = cardMeta.map(() => rng() + 0.15);
+  const weightSum = weights.reduce((s, w) => s + w, 0);
+  let allocated = 0;
+  const cards: Card[] = cardMeta.map((c, i) => {
+    // Все карты, кроме последней, округляем вниз до 100 ₩; остаток отдаём
+    // последней — так гарантируем, что сумма точно равна total.
+    const isLast = i === cardMeta.length - 1;
+    const balance = isLast
+      ? total - allocated
+      : Math.floor((total * weights[i]!) / weightSum / 100) * 100;
+    allocated += balance;
+    return { ...c, balance };
+  });
 
   const balance: Balance = {
     total,

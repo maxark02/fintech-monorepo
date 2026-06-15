@@ -4,7 +4,7 @@ import { NavIcon } from "../_components/nav-icon";
 import { PageHeader } from "../_components/PageHeader";
 import { NumberPopIn } from "../_components/NumberPopIn";
 import { CardItem } from "@/features/card/components/cardItem"; // ✅ импорт из файла
-import { MOCK_CARDS } from "@/mocks/cards";
+import { useBalance } from "@/features/balance/hooks/useBalance";
 
 const CARD_GRADIENTS: Record<string, string> = {
   credit: "linear-gradient(135deg, #0f1a35 0%, #1c1c22 100%)",
@@ -12,10 +12,11 @@ const CARD_GRADIENTS: Record<string, string> = {
 };
 
 export default function CardsPage() {
-  const totalCardBalance = MOCK_CARDS.reduce(
-    (sum, card) => sum + card.balance,
-    0,
-  );
+  // Карты берём из данных аккаунта: их количество и баланс уникальны для
+  // каждого пользователя, а сумма по картам равна общему балансу счёта.
+  const { balance } = useBalance();
+  const cards = balance?.cards ?? [];
+  const totalCardBalance = cards.reduce((sum, card) => sum + card.balance, 0);
 
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
@@ -35,13 +36,13 @@ export default function CardsPage() {
         </span>
       </div>
 
-      {MOCK_CARDS.map((card) => (
+      {cards.map((card) => (
         <CardItem
           key={card.id}
           card={card}
           balance={card.balance}
           gradient={
-            CARD_GRADIENTS[card.id] ??
+            CARD_GRADIENTS[card.type] ??
             "linear-gradient(135deg, #0f1a35 0%, #1c1c22 100%)"
           }
         />
