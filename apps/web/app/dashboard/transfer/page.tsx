@@ -6,6 +6,7 @@ import { PageHeader } from "../_components/PageHeader";
 import { NavIcon } from "../_components/nav-icon";
 import { useBalance } from "@/features/balance/hooks/useBalance";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { useLedgerStore } from "@/features/ledger/ledgerStore";
 import { BANKS, generateRecents } from "@/features/transfer/recents";
 import { formatKRW } from "@/lib/format";
 
@@ -29,6 +30,7 @@ export default function TransferPage() {
   const router = useRouter();
   const { balance } = useBalance();
   const userId = useAuthStore((s) => s.user?.id);
+  const addTransaction = useLedgerStore((s) => s.addTransaction);
 
   const recents = useMemo(() => generateRecents(userId), [userId]);
 
@@ -58,6 +60,26 @@ export default function TransferPage() {
   const onAmountChange = (raw: string) => {
     const digits = raw.replace(/\D/g, "");
     setAmount(digits ? Number(digits) : 0);
+  };
+
+  // Отправка: списываем сумму со счёта, добавляя расходную транзакцию в ledger
+  const handleSend = () => {
+    if (!canSend) return;
+    if (userId) {
+      addTransaction(userId, {
+        id: `t-${Date.now()}`,
+        title: `Transfer to ${name.trim()}`,
+        category: "Transfer",
+        amount: -amount,
+        currency: "KRW",
+        date: new Date().toISOString().slice(0, 10),
+        merchant: bank,
+        type: "expense",
+        emoji: "💸",
+        cardId: balance?.cards[0]?.id ?? "1",
+      });
+    }
+    setSent(true);
   };
 
   // --- Экран успеха ---
@@ -233,7 +255,7 @@ export default function TransferPage() {
 
       <button
         disabled={!canSend}
-        onClick={() => setSent(true)}
+        onClick={handleSend}
         className="w-full h-14 rounded-2xl bg-accent text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
       >
         <NavIcon name="arrow-up-right" className="w-5 h-5" />

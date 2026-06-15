@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { NavIcon } from "../_components/nav-icon";
 import { PageHeader } from "../_components/PageHeader";
 import { NumberPopIn } from "../_components/NumberPopIn";
@@ -24,9 +25,12 @@ export default function CardsPage() {
       <PageHeader
         title="Cards"
         rightElement={
-          <button className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main">
+          <Link
+            href="/dashboard/cards/add"
+            className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main hover:opacity-80 transition-opacity"
+          >
             <NavIcon name="plus" className="w-5 h-5" />
-          </button>
+          </Link>
         }
       />
 
