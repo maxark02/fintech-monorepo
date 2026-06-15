@@ -4,6 +4,7 @@ import { PageHeader } from "#/app/dashboard/_components/PageHeader";
 import { NavIcon } from "../_components/nav-icon";
 import { useTransactions } from "@/features/transactions/hooks/useTransactions";
 import { TransactionList } from "@/features/transactions/";
+import { SpendingCalendar } from "@/features/transactions/components/SpendingCalendar";
 import { useState } from "react";
 import { Skeleton } from "@fin/ui";
 import { NumberPopIn } from "../_components/NumberPopIn";
@@ -18,6 +19,7 @@ export default function TransactionsPage() {
     .filter((t) => t.type === "expense")
     .reduce((s, t) => s + t.amount, 0);
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const filterTabs: Array<{
     label: string;
@@ -38,8 +40,15 @@ export default function TransactionsPage() {
       <PageHeader
         title="Transactions"
         rightElement={
-          <button className="w-9 h-9 rounded-full bg-icon-bg flex items-center justify-center text-text-main">
-            <NavIcon name="calendar" className="w-5 h-5" />
+          <button
+            onClick={() => setShowCalendar((v) => !v)}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+              showCalendar
+                ? "bg-accent text-white"
+                : "bg-icon-bg text-text-main"
+            }`}
+          >
+            <NavIcon name={showCalendar ? "activity" : "calendar"} className="w-5 h-5" />
           </button>
         }
       />
@@ -110,8 +119,12 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      {/* Transaction List */}
-      <TransactionList transactions={filteredTransaction ?? []} />
+      {/* Календарь трат или список транзакций */}
+      {showCalendar ? (
+        <SpendingCalendar transactions={data ?? []} />
+      ) : (
+        <TransactionList transactions={filteredTransaction ?? []} />
+      )}
     </div>
   );
 }
